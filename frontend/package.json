@@ -1,0 +1,27 @@
+{
+  "name": "kateikyoshi-kun",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "esbuild src --outdir=dist --bundle --minify",
+    "test": "vitest",
+    "watch": "esbuild src --outdir=dist --bundle --watch",
+    "lint": "eslint 'src/**/*.{js,ts}'"
+  },
+  "keywords": [
+    "chrome-extension",
+    "typescript",
+    "vitest"
+  ],
+  "author": "motsupot",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.195",
+    "esbuild": "^0.18.11",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7",
+    "vitest": "^0.33.0"
+  }
+}
