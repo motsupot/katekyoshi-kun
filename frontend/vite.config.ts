@@ -27,6 +27,7 @@ const manifest = defineManifest({
   ],
   action: {
     default_popup: 'index.html',
+    default_icon: "kateikyoushi_woman_boy.png"
   },
 });
 
