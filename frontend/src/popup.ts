@@ -1,38 +1,21 @@
-import { MessageActionsId, ResponseMessageData, ZennArticleData } from './types';
-
 document.addEventListener('DOMContentLoaded', () => {
-  // 現在のタブ情報を取得
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length === 0 || tabs[0].id === undefined) {
-      throw new Error('アクティブなタブが見つかりませんでした。');
+    console.log('DOMContentLoaded event fired in popup.js');
+
+    const questionInput = document.getElementById('question') as HTMLInputElement;
+    const askButton = document.getElementById('askButton');
+    const responseDiv = document.getElementById('response');
+
+    if (questionInput == null || askButton == null || responseDiv == null) {
+      console.error("ヌルがぬるぬる！");
+      throw Error("ヌルがぬるぬる！");
     }
-    chrome.tabs.sendMessage<MessageActionsId>(
-      tabs[0].id,
-      { action: 'get-zenn-articles' },
-      (response: ResponseMessageData | undefined) => {
-        if (chrome.runtime.lastError) {
-          throw new Error(chrome.runtime.lastError.message);
-        }
 
-        if (!response) {
-          throw new Error('記事情報の取得に失敗しました。');
-        }
+    askButton.addEventListener('click', function() {
+        const question = questionInput.value;
+        responseDiv.textContent = '考え中...';
 
-        const markdown = createArticleMarkdown(response.data);
-        const textarea = document.querySelector<HTMLTextAreaElement>('.markdown-output');
-        if (!textarea) {
-          throw new Error('テキストエリア要素が見つかりませんでした。');
-        }
-        textarea.value = markdown;
-      },
-    );
-  });
+        // デモ用に固定文言を設定
+        const demoResponse = "これはデモの回答です。質問内容は「" + question + "」ですね。";
+        responseDiv.textContent = demoResponse;
+    });
 });
-
-const createArticleMarkdown = (articles: ZennArticleData[]) => {
-  return articles
-    .map((article) => {
-      return `## ${article.emoji}${article.title}\n\nlink🔗 : https://zenn.dev${article.url}\n`;
-    })
-    .join('\n');
-};
