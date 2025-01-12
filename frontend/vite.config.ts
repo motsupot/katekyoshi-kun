@@ -15,10 +15,7 @@ const manifest = defineManifest({
   content_scripts: [
     {
       js: ['src/scripts/index.ts'], // 拡張子を .ts に変更する
-      matches: [
-        'https://developer.chrome.com/docs/extensions/*',
-        'https://developer.chrome.com/docs/webstore/*',
-      ]
+      matches: [ "<all_urls>" ]
     }
   ],
 })
