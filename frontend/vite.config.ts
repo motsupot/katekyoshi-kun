@@ -26,8 +26,17 @@ const manifest = defineManifest({
       js: ["src/content.ts"],
     },
   ],
+  web_accessible_resources: [
+    {
+      matches: ["<all_urls>"],
+      resources: ["src/content.ts"],
+    }
+  ],
+  background: {
+    service_worker: "src/background.ts",
+  },
   action: {
-    default_popup: "index.html",
+    default_popup: "src/popup.html",
     default_icon: "kateikyoushi_woman_boy.png",
   },
 });
@@ -36,7 +45,7 @@ export default defineConfig({
   plugins: [viteManifestHackIssue846, crx({ manifest })],
   build: {
     outDir: "dist",
-    emptyOutDir: true,
+    // emptyOutDir: true,
   },
   server: {
     port: 5173,
