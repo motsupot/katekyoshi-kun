@@ -8,6 +8,7 @@
     "activeTab"
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": "kateikyoushi_woman_boy.png"
   }
 }
