@@ -24,8 +24,7 @@ def read_root():
 @app.post("/predict")
 async def predict(request: PredictRequest):
     # エンドポイントの取得
-    endpoint = aiplatform.Endpoint(endpoint_name="projects/{project_id}/locations/{location}/endpoints/{endpoint_id}")
-    model = GenerativeModel("gemini-1.5-flash")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     response = model.generate_content(request.text)
     print(response.text) #  The opposite of hot is cold.
