@@ -5,8 +5,9 @@
   "scripts": {
     "build": "esbuild src --outdir=dist --bundle --minify",
     "test": "vitest",
-    "watch": "esbuild src --outdir=dist --bundle --watch",
-    "lint": "eslint 'src/**/*.{js,ts}'"
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "watch": "chokidar 'src/**/*' -c 'vite build && touch dist/manifest.json'"
+
   },
   "keywords": [
     "chrome-extension",
@@ -17,6 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/chrome": "^0.0.195",
+    "chokidar-cli": "^3.0.0",
     "esbuild": "^0.18.11",
     "eslint": "^9.18.0",
     "prettier": "^3.4.2",
