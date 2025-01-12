@@ -1,10 +1,13 @@
 {
-  "name": "家庭教師くん",
-  "description": "家庭教師エージェントです。",
-  "version": "1.0",
   "manifest_version": 3,
+  "name": "AI家庭教師くん",
+  "version": "0.1",
+  "description": "AI家庭教師くんです。",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
   "action": {
-    "default_popup": "hello.html",
-    "default_icon": "kateikyoushi_woman_boy.png"
+    "default_popup": "popup.html"
   }
 }
