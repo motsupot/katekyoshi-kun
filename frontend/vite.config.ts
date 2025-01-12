@@ -23,17 +23,17 @@ const manifest = defineManifest({
   content_scripts: [
     {
       matches: ["<all_urls>"],
-      js: ["src/content.ts"],
+      js: ["src/content.ts"], // ビルド後のファイルを指定
     },
   ],
   web_accessible_resources: [
     {
       matches: ["<all_urls>"],
       resources: ["src/content.ts"],
-    }
+    },
   ],
-  background: {
-    service_worker: "src/background.ts",
+  content_security_policy: {
+    extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
   },
   action: {
     default_popup: "src/popup.html",
@@ -45,7 +45,14 @@ export default defineConfig({
   plugins: [viteManifestHackIssue846, crx({ manifest })],
   build: {
     outDir: "dist",
-    // emptyOutDir: true,
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: "assets/[name].js",
+        chunkFileNames: "assets/[name].js",
+        assetFileNames: "assets/[name].[ext]",
+      },
+    },
   },
   server: {
     port: 5173,

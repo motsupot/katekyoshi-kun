@@ -1,4 +1,16 @@
-import { MessageActionsId, ResponseMessageData, ZennArticleData } from './types';
+type MessageActionsId = {
+  action: 'get-zenn-articles';
+};
+
+type ZennArticleData = {
+  title: string;
+  url: string;
+  emoji: string;
+};
+
+type ResponseMessageData = {
+  data: ZennArticleData[];
+};
 
 const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener(
