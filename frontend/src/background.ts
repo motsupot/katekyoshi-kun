@@ -16,10 +16,10 @@ chrome.action.onClicked.addListener((tab) => {
 
 // メッセージのリスナーを設定
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // if (message.action === 'doSomething') {
-  //   console.log('メッセージを受け取りました:', message.data);
-  //   // メッセージに基づいて処理を行う
-  //   sendResponse({ success: true });
-  // }
+  if (message.action === 'doSomething') {
+    console.log('メッセージを受け取りました:', message.data);
+    // メッセージに基づいて処理を行う
+    sendResponse({ success: true });
+  }
   return true;  // 非同期レスポンスを使用するためにtrueを返す
 });

@@ -1,8 +1,12 @@
 {
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
+  },
+  "dependencies": {
+    "chrome-extension-vite-sample": "file:"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.14",

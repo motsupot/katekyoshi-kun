@@ -16,21 +16,17 @@ const viteManifestHackIssue846: PluginOption & {
 
 const manifest = defineManifest({
   manifest_version: 3,
-  name: '家庭教師くん',
+  name: 'Chrome拡張機能の練習',
   version: '1.0.0',
-  description: '家庭教師エージェントです。',
+  description: 'Zenn投稿するChrome拡張機能のサンプルです。',
   content_scripts: [
     {
       matches: ['https://zenn.dev/topics/*'],
       js: ['src/content.ts'],
     },
   ],
-  background: {
-    service_worker: "src/background.ts"
-  },
   action: {
     default_popup: 'index.html',
-    default_icon: "kateikyoushi_woman_boy.png"
   },
 });
 
