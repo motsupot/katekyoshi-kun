@@ -17,24 +17,18 @@ const viteManifestHackIssue846: PluginOption & {
 const manifest = defineManifest({
   manifest_version: 3,
   name: "AI家庭教師くん",
-  version: "1.0.0",
   description: "AI家庭教師くんです。",
+  version: "1.0.0",
   permissions: ["storage", "activeTab"],
+  icons: {
+    "128": "kateikyoushi_woman_boy.png",
+  },
   content_scripts: [
     {
+      js: ["src/content.ts"],
       matches: ["<all_urls>"],
-      js: ["src/content.ts"], // ビルド後のファイルを指定
     },
   ],
-  web_accessible_resources: [
-    {
-      matches: ["<all_urls>"],
-      resources: ["src/content.ts"],
-    },
-  ],
-  content_security_policy: {
-    extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
-  },
   action: {
     default_popup: "src/popup.html",
     default_icon: "kateikyoushi_woman_boy.png",
@@ -42,23 +36,20 @@ const manifest = defineManifest({
 });
 
 export default defineConfig({
-  plugins: [viteManifestHackIssue846, crx({ manifest })],
+  plugins: [/*viteManifestHackIssue846*/, crx({ manifest })],
   build: {
-    outDir: "dist",
+    // 出力設定
+    outDir: "dist", // 出力先
     emptyOutDir: true,
     rollupOptions: {
+      input: {
+        content: "src/content.ts", // 入力ファイル
+      },
       output: {
-        entryFileNames: "assets/[name].js",
+        entryFileNames: "assets/[name].js", // 出力ファイル名
         chunkFileNames: "assets/[name].js",
         assetFileNames: "assets/[name].[ext]",
       },
-    },
-  },
-  server: {
-    port: 5173,
-    strictPort: true,
-    hmr: {
-      port: 5173,
     },
   },
 });
