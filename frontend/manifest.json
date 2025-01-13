@@ -14,7 +14,10 @@
     "service_worker": "dist/background/index.js"
   },
   "host_permissions": ["<all_urls>"],
-  "action": {},
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "kateikyoushi_woman_boy.png"
+  },
   "icons": {
     "128": "kateikyoushi_woman_boy.png"
   }

@@ -9,6 +9,7 @@
     "build:content": "vite build --config vite.config.content.mts",
     "build:page": "vite build --config vite.config.page.mts",
     "build:background": "vite build --config vite.config.background.mts",
+    "build:popup": "vite build --config vite.config.popup.mts",
     "preview": "vite preview"
   },
   "devDependencies": {
