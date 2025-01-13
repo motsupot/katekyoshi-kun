@@ -1,3 +1,12 @@
+chrome.tabs.executeScript(
+  { code: "window.getSelection().toString();" },
+  (selection) => {
+      const q = document.getElementById("question");
+      if (!q) return;
+      q.innerText = selection[0] || "No text selected.";
+  }
+);
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded event fired in popup.js');
 
