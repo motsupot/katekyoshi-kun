@@ -3,6 +3,8 @@ import { createRoot} from "react-dom/client"
 import { Page } from "./Page";
 
 const container = document.getElementById('root');
+console.log("page");
+
 if (container === null) {
   throw new Error("AHI");
 }
