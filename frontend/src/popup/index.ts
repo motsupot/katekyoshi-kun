@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const askButton = document.getElementById('askButton');
     const responseDiv = document.getElementById('response');
 
+    if (!questionInput || !askButton || !responseDiv) {
+      alert("NO NO");
+      return;
+    }
+    alert("OK");
+
     askButton.addEventListener('click', function() {
         const question = questionInput.value;
         responseDiv.textContent = '考え中...';

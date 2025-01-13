@@ -1,14 +1,24 @@
 {
   "manifest_version": 3,
   "name": "AI家庭教師くん",
-  "version": "0.1",
   "description": "AI家庭教師くんです。",
-  "permissions": [
-    "storage",
-    "activeTab"
+  "version": "1.0.0",
+  "permissions": ["storage", "activeTab", "contextMenus", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content/index.js"]
+    }
   ],
+  "background": {
+    "service_worker": "dist/background/index.js"
+  },
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "kateikyoushi_woman_boy.png"
+  },
+  "icons": {
+    "128": "kateikyoushi_woman_boy.png"
   }
 }
