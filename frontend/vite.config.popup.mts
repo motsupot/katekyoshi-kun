@@ -12,6 +12,11 @@ export default defineConfig({
         ascii_only: true,
       }
     },
+    rollupOptions: {
+      input: {
+        popup: 'popup.html',
+      },
+    },
     outDir: "dist/popup",
   },
 });
