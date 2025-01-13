@@ -9,9 +9,33 @@ document.addEventListener('DOMContentLoaded', function() {
         const question = questionInput.value;
         responseDiv.textContent = '考え中...';
 
-        // デモ用に固定文言を設定
-        const demoResponse = "これはデモの回答です。質問内容は「" + question + "」ですね。";
-        responseDiv.textContent = demoResponse;
-    });
+        // バックエンドAPIのURL (ローカル環境用)
+        const apiUrl = 'http://localhost:8888/predict';
 
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: question })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('API response:', data);
+            if (data && data.predictions) {
+                responseDiv.textContent = data.predictions;
+            } else {
+                responseDiv.textContent = 'APIからの応答が不正です。';
+            }
+        })
+        .catch(error => {
+            console.error('Error during API call:', error);
+            responseDiv.textContent = 'エラーが発生しました。';
+        });
+    });
 });
