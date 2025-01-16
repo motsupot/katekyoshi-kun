@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot} from "react-dom/client"
 import { Page } from "./Page";
+import './index.css';
 
 const getParams = (): { selectedText: string | null } => {
   const url = new URL(window.location.href);
