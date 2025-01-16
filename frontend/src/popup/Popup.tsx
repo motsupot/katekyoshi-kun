@@ -1,71 +1,76 @@
-document.addEventListener('DOMContentLoaded', function () {
-  console.log('DOMContentLoaded event fired in popup.js');
+import React, { useEffect, useState } from "react";
 
-  const questionInput = document.getElementById('question');
-  const askButton = document.getElementById('askButton');
-  const responseDiv = document.getElementById('response');
+export const Popup: React.FC = () => {
+  const [question, setQuestion] = useState<string>("");
+  const [response, setResponse] = useState<string>("");
 
-  if (!questionInput || !askButton || !responseDiv) {
-      alert("必要な要素が見つかりませんでした");
-      return;
-  }
-
-  // 選択中のテキストを取得
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  useEffect(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0];
       if (!activeTab || !activeTab.id) return;
 
       chrome.scripting.executeScript(
-          {
-              target: { tabId: activeTab.id },
-              func: () => window.getSelection()?.toString(),
-          },
-          (injectionResults) => {
-              if (chrome.runtime.lastError) {
-                  console.error('Error:', chrome.runtime.lastError.message);
-                  return;
-              }
-              if (injectionResults && injectionResults[0]?.result) {
-                  questionInput.value = injectionResults[0].result || '';
-              } else {
-                  questionInput.value = 'No text selected.';
-              }
+        {
+          target: { tabId: activeTab.id },
+          func: () => window.getSelection()?.toString(),
+        },
+        (injectionResults) => {
+          if (chrome.runtime.lastError) {
+            console.error("Error:", chrome.runtime.lastError.message);
+            return;
           }
+          const selectedText =
+            injectionResults?.[0]?.result || "No text selected.";
+          setQuestion(selectedText);
+        }
       );
-  });
+    });
+  }, []);
 
-  // 質問ボタンのクリックイベント
-  askButton.addEventListener('click', function () {
-      const question = questionInput.value;
-      responseDiv.textContent = '考え中...';
+  const handleAsk = () => {
+    setResponse("考え中...");
 
-      // バックエンドAPIのURL
-      const apiUrl = 'http://localhost:8888/predict';
+    const apiUrl = "http://localhost:8888/predict";
 
-      fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: question }),
+    fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text: question }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
       })
-          .then((response) => {
-              if (!response.ok) {
-                  throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.json();
-          })
-          .then((data) => {
-              console.log('API response:', data);
-              if (data && data.predictions) {
-                  responseDiv.textContent = data.predictions;
-              } else {
-                  responseDiv.textContent = 'APIからの応答が不正です。';
-              }
-          })
-          .catch((error) => {
-              console.error('Error during API call:', error);
-              responseDiv.textContent = 'エラーが発生しました。';
-          });
-  });
-});
+      .then((data) => {
+        if (data?.predictions) {
+          setResponse(data.predictions);
+        } else {
+          setResponse("APIからの応答が不正です。");
+        }
+      })
+      .catch((err) => {
+        console.error("Error during API call:", err);
+        setResponse("エラーが発生しました。");
+      });
+  };
+
+  return (
+    <div style={{ width: 300, padding: 10 }}>
+      <h1>AI家庭教師くん（popup）</h1>
+      <textarea
+        style={{ width: "100%", height: 100, marginBottom: 10 }}
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="質問を入力してください~~"
+      />
+      <button style={{ padding: "10px 20px" }} onClick={handleAsk}>
+        質問する
+      </button>
+      <div style={{ marginTop: 10, whiteSpace: "pre-line" }}>{response}</div>
+    </div>
+  );
+};
