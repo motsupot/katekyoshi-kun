@@ -60,7 +60,7 @@ export const Popup: React.FC = () => {
 
   return (
     <div style={{ width: 300, padding: 10 }}>
-      <h1>AI家庭教師くん（popup）</h1>
+      <h1 className="text-green-600">AI家庭教師くん（popup）</h1>
       <textarea
         style={{ width: "100%", height: 100, marginBottom: 10 }}
         value={question}

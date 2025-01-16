@@ -17,7 +17,7 @@ export const Page: React.FC<{
 
   return (
     <>
-      <h1>AI家庭教師くん</h1>
+      <h1 className="text-green-600">AI家庭教師くん</h1>
       <textarea
         id="question"
         placeholder="質問を入力してください~~"
