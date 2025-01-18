@@ -15,7 +15,7 @@
   },
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "./dist/popup/popup.html",
     "default_icon": "kateikyoushi_woman_boy.png"
   },
   "icons": {
