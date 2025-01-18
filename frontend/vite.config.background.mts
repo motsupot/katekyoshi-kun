@@ -1,18 +1,18 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  define: { 'process.env.MODE_ENV' : "'development'"},
+  define: { "process.env.NODE_ENV": "'development'" },
   build: {
     lib: {
       entry: "src/background/index.ts",
       fileName: () => `index.js`,
-      name: 'katekyoshi-kun-sw',
+      name: "katekyoshi-kun-sw",
     },
-    minify: 'terser',
+    minify: "terser",
     terserOptions: {
       format: {
         ascii_only: true,
-      }
+      },
     },
     outDir: "dist/background",
   },
