@@ -13,7 +13,14 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "sampleMenu") {
     console.log("アイコンがクリックされました！");
   }
+  const url = ((selectionText: string | undefined) => {
+    if (selectionText == null || selectionText === "") {
+      return `dist/page/index.html`;
+    }
+    return `dist/page/index.html?selected_text=${selectionText}`;
+  })(info.selectionText);
+  if (info.selectionText)
   chrome.tabs
-    .create({ url: `dist/page/index.html` })
+    .create({ url })
     .catch((err) => console.log(err));
 });
