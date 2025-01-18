@@ -1,70 +1,68 @@
-type MessageActionsId = {
-  action: 'get-zenn-articles';
-};
+const createPopupElement = (text: string, position: DOMRect) => {
+  console.log("Creating popup for text:", text, "at position:", position);
 
-type ZennArticleData = {
-  title: string;
-  url: string;
-  emoji: string;
-};
+  const popup = document.createElement("div");
+  popup.id = "custom-popup";
+  popup.style.position = "absolute";
+  popup.style.top = `${position.bottom + window.scrollY}px`;
+  popup.style.left = `${position.left + window.scrollX}px`;
+  popup.style.backgroundColor = "#fff";
+  popup.style.border = "1px solid #ccc";
+  popup.style.padding = "10px";
+  popup.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)";
+  popup.style.zIndex = "9999";
+  popup.innerText = "Loading...";
 
-type ResponseMessageData = {
-  data: ZennArticleData[];
-};
+  document.body.appendChild(popup);
 
-const setupMessageListener = () => {
-  chrome.runtime.onMessage.addListener(
-    async (
-      request: MessageActionsId,
-      _sender,
-      sendResponse: (response: ResponseMessageData) => void,
-    ) => {
-      if (request.action === 'get-zenn-articles') {
-        const details: ZennArticleData[] = [];
-        let count = 1;
-        let element: Element | null;
+  console.log("Popup created:", popup);
 
-        // 記事情報が取得できなくなるまで繰り返す
-        while (
-          (element = document.querySelector(
-            `#__next > div.View_contents__azal2 > div > section > div.View_itemsContainer__srSwj > div > div:nth-child(${count})`,
-          )) !== null
-        ) {
-          try {
-            const article = getArticleData(element);
-            details.push(article);
-          } catch (error) {
-            console.error(`記事の取得中にエラーが発生しました : ${error}`);
-            continue;
-          }
-          count++;
-        }
-
-        sendResponse({ data: details });
-      }
-      return true;
+  const apiUrl = "https://xxx/predict";
+  fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({ text }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("API response:", data);
+      if (data?.predictions) {
+        popup.innerText = data.predictions;
+      } else {
+        popup.innerText = "結果を取得できませんでした。";
+      }
+    })
+    .catch((err) => {
+      console.error("API error:", err);
+      popup.innerText = "エラーが発生しました。";
+    });
 };
 
-const getArticleData = (element: Element): ZennArticleData => {
-  const titleElemnt = element.querySelector<HTMLElement>('article > div > a > h2');
-  const urlElement = element.querySelector<HTMLElement>('article > div > a');
-  const emojiElement = element.querySelector<HTMLElement>(
-    'article > a > span.Emoji_nativeEmoji__GMBzX',
-  );
-
-  if (!titleElemnt || !urlElement || !emojiElement) {
-    throw new Error('必要な商品情報の要素が見つかりませんでした。');
+const removePopup = () => {
+  const existingPopup = document.getElementById("custom-popup");
+  if (existingPopup) {
+    console.log("Removing existing popup");
+    existingPopup.remove();
   }
-
-  return {
-    title: titleElemnt.textContent || '',
-    url: urlElement.getAttribute('href') || '',
-    emoji: emojiElement.textContent || '',
-  };
 };
 
-if (typeof chrome !== 'undefined' && chrome.runtime) {
-  setupMessageListener();
-}
+document.addEventListener("mouseup", () => {
+  console.log("Mouseup event detected");
+  const selection = window.getSelection();
+  const selectedText = selection?.toString().trim();
+  console.log("Selected text:", selectedText);
+
+  if (selectedText) {
+    const range = selection?.getRangeAt(0);
+    const rect = range?.getBoundingClientRect();
+    console.log("Selection range:", range, "Bounding rect:", rect);
+    if (rect) {
+      removePopup(); // 既存ポップアップを削除
+      createPopupElement(selectedText, rect);
+    }
+  } else {
+    removePopup();
+  }
+});
