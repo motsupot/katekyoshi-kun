@@ -59,18 +59,27 @@ export const Popup: React.FC = () => {
   };
 
   return (
-    <div style={{ width: 300, padding: 10 }}>
-      <h1>AI家庭教師くん（popup）</h1>
+    <div className="w-[300px] p-4 bg-gradient-to-b from-blue-50 to-purple-100 rounded shadow-lg">
+      <h1 className="text-lg font-bold text-purple-600 mb-4">
+        AI家庭教師くん（popup）
+      </h1>
       <textarea
-        style={{ width: "100%", height: 100, marginBottom: 10 }}
+        className="w-full h-24 p-2 border border-purple-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-400 mb-4 bg-white"
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
         placeholder="質問を入力してください~~"
       />
-      <button style={{ padding: "10px 20px" }} onClick={handleAsk}>
+      <button
+        className="w-full py-2 px-4 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded hover:from-green-400 hover:to-teal-400 transition-colors"
+        onClick={handleAsk}
+      >
         質問する
       </button>
-      <div style={{ marginTop: 10, whiteSpace: "pre-line" }}>{response}</div>
+      <div
+        className="mt-4 p-2 bg-white border border-gray-300 rounded text-gray-700 whitespace-pre-line"
+      >
+        {response || "ここに回答が表示されます"}
+      </div>
     </div>
   );
 };
