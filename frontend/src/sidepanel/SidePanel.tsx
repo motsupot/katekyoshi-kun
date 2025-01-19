@@ -5,13 +5,14 @@ const SidePanelHeader: React.FC = () => (
   <h1>AI家庭教師くん（サイドパネル）</h1>
 );
 
-const usePageInfo = () => {
+const usePageInfo = (onPageChange: () => void) => {
   const [pageInfo, setPageInfo] = useState<{ title: string; url: string; content: string } | null>(null);
 
   useEffect(() => {
     const handleMessage = (message: any) => {
       if (message.type === "PAGE_INFO") {
         setPageInfo(message.pageInfo);
+        onPageChange();
       }
     };
 
@@ -20,7 +21,7 @@ const usePageInfo = () => {
     return () => {
       chrome.runtime.onMessage.removeListener(handleMessage);
     };
-  }, []);
+  }, [onPageChange]);
 
   return pageInfo;
 };
@@ -59,18 +60,35 @@ const useFetch = (url: string, defaultState: any) => {
 };
 
 export const SidePanel: React.FC = () => {
-  const pageInfo = usePageInfo();
   const [question, setQuestion] = useState<string>("");
+  const [summary, setSummary] = useState<string | null>(null);
+  const [response, setResponse] = useState<string | null>(null);
 
-  const { data: summary, loading: isSummaryLoading, fetchData: fetchSummary } = useFetch(
+  const resetStates = () => {
+    setSummary(null);
+    setResponse(null);
+    setQuestion("");
+  };
+
+  const pageInfo = usePageInfo(resetStates);
+
+  const { data: summaryData, loading: isSummaryLoading, fetchData: fetchSummary } = useFetch(
     `${API_HOST}/predict`,
     null
   );
 
-  const { data: response, loading: isQuestionLoading, fetchData: fetchAnswer } = useFetch(
+  const { data: responseData, loading: isQuestionLoading, fetchData: fetchAnswer } = useFetch(
     `${API_HOST}/predict`,
     null
   );
+
+  useEffect(() => {
+    if (summaryData !== null) setSummary(summaryData);
+  }, [summaryData]);
+
+  useEffect(() => {
+    if (responseData !== null) setResponse(responseData);
+  }, [responseData]);
 
   const handleSummary = () => {
     if (pageInfo) {
