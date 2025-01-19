@@ -8,9 +8,10 @@ const SidePanelHeader: React.FC = () => (
 export const SidePanel: React.FC = () => {
   const [pageInfo, setPageInfo] = useState<{ title: string; url: string; content: string } | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSummaryLoading, setIsSummaryLoading] = useState<boolean>(false);
   const [question, setQuestion] = useState<string>("");
   const [response, setResponse] = useState<string | null>(null);
+  const [isQuestionLoading, setIsQuestionLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const handleMessage = (message: any) => {
@@ -31,7 +32,7 @@ export const SidePanel: React.FC = () => {
   const fetchSummary = async () => {
     if (!pageInfo) return;
 
-    setIsLoading(true);
+    setIsSummaryLoading(true);
     setSummary(null);
 
     try {
@@ -58,7 +59,7 @@ export const SidePanel: React.FC = () => {
       console.error("Error fetching summary:", error);
       setSummary("エラーが発生しました。");
     } finally {
-      setIsLoading(false);
+      setIsSummaryLoading(false);
     }
   };
 
@@ -66,7 +67,7 @@ export const SidePanel: React.FC = () => {
     if (!pageInfo) return;
     if (!question) return;
 
-    setIsLoading(true);
+    setIsQuestionLoading(true);
     setResponse("考え中...");
 
     try {
@@ -93,7 +94,7 @@ export const SidePanel: React.FC = () => {
       console.error("Error during API call:", error);
       setResponse("エラーが発生しました。");
     } finally {
-      setIsLoading(false);
+      setIsQuestionLoading(false);
     }
   };
 
@@ -102,8 +103,8 @@ export const SidePanel: React.FC = () => {
       <SidePanelHeader />
       {pageInfo && (
         <div>
-          {!isLoading && !summary && <button onClick={fetchSummary}>要約する</button>}
-          {isLoading && <p>要約中・・・</p>}
+          {!isSummaryLoading && !summary && <button onClick={fetchSummary}>要約する</button>}
+          {isSummaryLoading && <p>要約中・・・</p>}
         </div>
       )}
       {summary && (
@@ -121,7 +122,7 @@ export const SidePanel: React.FC = () => {
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="質問を入力してください"
         />
-        <button onClick={handleAsk}>質問する</button>
+        <button onClick={handleAsk} disabled={isQuestionLoading}>質問する</button>
         {response && <p>{response}</p>}
       </div>
     </div>
