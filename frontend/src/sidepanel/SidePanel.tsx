@@ -9,12 +9,15 @@ export const SidePanel: React.FC = () => {
   const [pageInfo, setPageInfo] = useState<{ title: string; url: string; content: string } | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>("");
+  const [response, setResponse] = useState<string | null>(null);
 
   useEffect(() => {
     const handleMessage = (message: any) => {
       if (message.type === "PAGE_INFO") {
         setPageInfo(message.pageInfo);
         setSummary(null);
+        setResponse(null);
       }
     };
 
@@ -59,6 +62,41 @@ export const SidePanel: React.FC = () => {
     }
   };
 
+  const handleAsk = async () => {
+    if (!pageInfo) return;
+    if (!question) return;
+
+    setIsLoading(true);
+    setResponse("考え中...");
+
+    try {
+      const apiUrl = `${API_HOST}/predict`;
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: `「${question}」と言う質問に対して、以下の情報を踏まえて回答せよ。: ${pageInfo.content}` }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data?.predictions) {
+        setResponse(data.predictions);
+      } else {
+        setResponse("APIからの応答が不正です。");
+      }
+    } catch (error) {
+      console.error("Error during API call:", error);
+      setResponse("エラーが発生しました。");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       <SidePanelHeader />
@@ -75,6 +113,17 @@ export const SidePanel: React.FC = () => {
           <button onClick={fetchSummary}>再要約する</button>
         </div>
       )}
+      <div>
+        <h2>質問する</h2>
+        <input
+          type="text"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          placeholder="質問を入力してください"
+        />
+        <button onClick={handleAsk}>質問する</button>
+        {response && <p>{response}</p>}
+      </div>
     </div>
   );
 };
