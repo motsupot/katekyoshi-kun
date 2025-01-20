@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from google.cloud import aiplatform
+from google.cloud import aiplatform, firestore
 import vertexai
 from vertexai.generative_models import GenerativeModel, Image
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,6 +28,9 @@ LOCATION = "us-central1"
 # Vertex AIの初期化
 aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
+# Firestoreクライアントの作成
+db = firestore.Client()
+
 # リクエストボディのモデル定義
 class PredictRequest(BaseModel):
     text: str
@@ -47,4 +50,18 @@ async def predict(request: PredictRequest):
     # レスポンスの取得
     predictions = response.text
 
+    # Firestoreに質問と回答を保存(一旦、ユーザーIDは固定)
+    save_question_and_answer(request.text, predictions, "user123")
+
     return {"predictions": predictions}
+
+def save_question_and_answer(question: str, answer: str, user: str):
+    # コレクション「qa_sessions」に新しいドキュメントを作成
+    doc_ref = db.collection('qa_sessions').document()
+    # ドキュメントにデータを保存
+    doc_ref.set({
+        'question': question,
+        'answer': answer,
+        'user': user,
+        'timestamp': firestore.SERVER_TIMESTAMP
+    })
