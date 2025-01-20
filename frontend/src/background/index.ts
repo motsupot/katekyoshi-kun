@@ -24,3 +24,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     .create({ url })
     .catch((err) => console.log(err));
 });
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.active) {
+    chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      func: () => {
+        const pageInfo = {
+          title: document.title,
+          url: window.location.href,
+          content: document.body.innerText,
+        };
+        chrome.runtime.sendMessage({ type: "PAGE_INFO", pageInfo });
+      },
+    });
+  }
+});

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_HOST } from "../constants";
 
 export const Popup: React.FC = () => {
   const [question, setQuestion] = useState<string>("");
@@ -30,7 +31,7 @@ export const Popup: React.FC = () => {
   const handleAsk = () => {
     setResponse("考え中...");
 
-    const apiUrl = "http://localhost:8888/predict";
+    const apiUrl = `${API_HOST}/predict`;
 
     fetch(apiUrl, {
       method: "POST",

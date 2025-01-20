@@ -10,11 +10,13 @@
     "build:page": "vite build --config vite.config.page.mts",
     "build:background": "vite build --config vite.config.background.mts",
     "build:popup": "vite build --config vite.config.popup.mts",
+    "build:sidepanel": "vite build --config vite.config.sidepanel.mts",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.14",
     "@types/chrome": "^0.0.268",
+    "@types/node": "^22.10.7",
     "@types/react": "^19.0.6",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
