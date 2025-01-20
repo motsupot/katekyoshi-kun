@@ -17,7 +17,7 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        popup: 'sidepanel.html',
+        sidepanel: 'sidepanel.html',
       },
     },
     outDir: "dist/sidepanel",

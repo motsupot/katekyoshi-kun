@@ -103,7 +103,7 @@ export const SidePanel: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="bg-black">
       <SidePanelHeader />
       {pageInfo && (
         <div>
