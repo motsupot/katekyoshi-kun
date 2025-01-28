@@ -14,6 +14,9 @@ importers:
       '@dnd-kit/sortable':
         specifier: ^10.0.0
         version: 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+      '@dnd-kit/utilities':
+        specifier: ^3.2.2
+        version: 3.2.2(react@19.0.0)
       '@lexical/react':
         specifier: ^0.23.1
         version: 0.23.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(yjs@13.6.22)
@@ -2593,6 +2596,8 @@ snapshots:
 
   katekyoshi-kun@file:(yjs@13.6.22):
     dependencies:
+      '@dnd-kit/core': 6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       '@lexical/react': 0.23.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(yjs@13.6.22)
       lexical: 0.23.1
       react: 19.0.0

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../constants";
 import Cards from "./Cards";
+import App from "../shared/components/App";
 
 const SidePanelHeader: React.FC = () => (
   <h1>AI家庭教師くん（サイドパネル）</h1>
@@ -104,7 +105,7 @@ export const SidePanel: React.FC = () => {
   };
 
   return (
-    <Cards></Cards>
+    <App />
   );
   return (
     <div>
