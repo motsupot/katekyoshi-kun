@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Card, CardBase } from "./base";
+import { PageInfo } from "../../types/Page";
 
 type Props = {
+  pageInfo: PageInfo | null;
   model: string;
 };
 

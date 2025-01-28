@@ -1,16 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBase } from "./base";
+import { PageInfo } from "../../types/Page";
+import { useFetch } from "../../shared/hooks";
+import { API_HOST } from "../../constants";
 
 type Props = {
+  pageInfo: PageInfo | null;
   content: string;
   hasGenerated: boolean;
 };
 
-export const SummaryCard: React.FC<Props> = ({}) => {
-  const [summaryText, setSummaryText] = useState("ここに要約が入ります");
+export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
+  const [summary, setSummary] = useState<string | null>(null);
+
+  const {
+    data: summaryData,
+    loading: isSummaryLoading,
+    fetchData: fetchSummary,
+  } = useFetch<typeof summary>(`${API_HOST}/predict`, null);
+
+  useEffect(() => {
+    if (summaryData !== null) setSummary(summaryData);
+  }, [summaryData]);
 
   const onClick = () => {
-    setSummaryText("要約しました。");
+    if (pageInfo) {
+      fetchSummary({ text: `以下の情報を要約して: ${pageInfo.content}` });
+    }
   };
 
   return (
@@ -28,7 +44,15 @@ export const SummaryCard: React.FC<Props> = ({}) => {
           borderRadius: "4px",
         }}
       >
-        {summaryText}
+        {(() => {
+          if (isSummaryLoading) {
+            return <p>要約中・・・</p>
+          }
+          if (!summary) {
+            return <p>ここに要約が入ります</p>
+          }
+          return <p>{summary}</p>
+        })()}
       </div>
       <button onClick={onClick}>要約する</button>
     </Card>

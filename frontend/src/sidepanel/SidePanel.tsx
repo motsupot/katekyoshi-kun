@@ -2,66 +2,9 @@ import React, { useEffect, useState } from "react";
 import { API_HOST } from "../constants";
 import { CardProps, renderCard } from "./components";
 import { SortableList } from "../shared/components/SortableList/SortableList";
+import { useFetch, usePageInfo } from "../shared/hooks";
 
 const SidePanelHeader: React.FC = () => <h1>AI家庭教師くん（サイドパネル）</h1>;
-
-const usePageInfo = (onPageChange: () => void) => {
-  const [pageInfo, setPageInfo] = useState<{
-    title: string;
-    url: string;
-    content: string;
-  } | null>(null);
-
-  useEffect(() => {
-    const handleMessage = (message: any) => {
-      if (message.type === "PAGE_INFO") {
-        setPageInfo(message.pageInfo);
-        onPageChange();
-      }
-    };
-
-    chrome.runtime.onMessage.addListener(handleMessage);
-
-    return () => {
-      chrome.runtime.onMessage.removeListener(handleMessage);
-    };
-  }, [onPageChange]);
-
-  return pageInfo;
-};
-
-const useFetch = (url: string, defaultState: any) => {
-  const [data, setData] = useState(defaultState);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchData = async (body: any) => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      setData(result?.predictions || "APIからの応答が不正です。");
-    } catch (err: any) {
-      console.error("Error fetching data:", err);
-      setError("エラーが発生しました。");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { data, loading, error, fetchData };
-};
 
 export const SidePanel: React.FC = () => {
   const [question, setQuestion] = useState<string>("");
@@ -80,13 +23,13 @@ export const SidePanel: React.FC = () => {
     data: summaryData,
     loading: isSummaryLoading,
     fetchData: fetchSummary,
-  } = useFetch(`${API_HOST}/predict`, null);
+  } = useFetch<typeof summary>(`${API_HOST}/predict`, null);
 
   const {
     data: responseData,
     loading: isQuestionLoading,
     fetchData: fetchAnswer,
-  } = useFetch(`${API_HOST}/predict`, null);
+  } = useFetch<typeof response>(`${API_HOST}/predict`, null);
 
   useEffect(() => {
     if (summaryData !== null) setSummary(summaryData);
@@ -111,8 +54,8 @@ export const SidePanel: React.FC = () => {
   };
 
   const [cards, setCards] = React.useState<CardProps[]>([
-    { id: "1", type: "Summary", content: "漸く要約", hasGenerated: true },
-    { id: "3", type: "Question", model: "ahiahi" },
+    { id: "1", type: "Summary", pageInfo, content: "漸く要約", hasGenerated: true },
+    { id: "3", type: "Question", pageInfo, model: "ahiahi" },
   ]);
 
   return (
