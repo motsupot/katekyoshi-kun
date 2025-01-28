@@ -1,7 +1,5 @@
 import React from "react";
-import { SortableList } from "../shared/components/SortableList/SortableList";
 import { Card } from "./components/base";
-import { CardProps, renderCard } from "./components";
 
 const ImageCard: React.FC<{ imageUrl: string; caption: string }> = ({
   imageUrl,
@@ -57,30 +55,3 @@ const ChatCard: React.FC<{ links: string[] }> = ({ links }) => {
     </Card>
   );
 };
-
-// Main component
-const CardList: React.FC = () => {
-  const [cards, setCards] = React.useState<CardProps[]>([
-    { id: "1", type: "Summary", content: "漸く要約", hasGenerated: true },
-    { id: "3", type: "Question", model: "ahiahi" },
-  ]);
-
-  return (
-    <>
-      <div style={{ maxWidth: 400, margin: "30px auto" }}>
-        <SortableList
-          items={cards}
-          onChange={setCards}
-          renderItem={(item) => (
-            <SortableList.Item id={item.id}>
-              {renderCard(item)}
-              <SortableList.DragHandle />
-            </SortableList.Item>
-          )}
-        />
-      </div>
-    </>
-  );
-};
-
-export default CardList;
