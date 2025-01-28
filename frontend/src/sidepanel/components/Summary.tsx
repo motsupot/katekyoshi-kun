@@ -6,8 +6,6 @@ import { API_HOST } from "../../constants";
 
 type Props = {
   pageInfo: PageInfo | null;
-  content: string;
-  hasGenerated: boolean;
 };
 
 export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
@@ -23,7 +21,7 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
     if (summaryData !== null) setSummary(summaryData);
   }, [summaryData]);
 
-  const onClick = () => {
+  const onClickSummary = () => {
     if (pageInfo) {
       fetchSummary({ text: `以下の情報を要約して: ${pageInfo.content}` });
     }
@@ -54,7 +52,7 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
           return <p>{summary}</p>
         })()}
       </div>
-      <button onClick={onClick}>要約する</button>
+      <button onClick={onClickSummary}>{summary ? "再" : ""}要約する</button>
     </Card>
   );
 };

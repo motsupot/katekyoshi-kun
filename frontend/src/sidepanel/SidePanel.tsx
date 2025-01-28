@@ -8,7 +8,7 @@ const SidePanelHeader: React.FC = () => <h1>AI家庭教師くん（サイドパ�
 
 export const SidePanel: React.FC = () => {
   const [question, setQuestion] = useState<string>("");
-  const [summary, setSummary] = useState<string | null>(null);
+  const [, setSummary] = useState<string | null>(null);
   const [response, setResponse] = useState<string | null>(null);
 
   const resetStates = () => {
@@ -20,30 +20,14 @@ export const SidePanel: React.FC = () => {
   const pageInfo = usePageInfo(resetStates);
 
   const {
-    data: summaryData,
-    loading: isSummaryLoading,
-    fetchData: fetchSummary,
-  } = useFetch<typeof summary>(`${API_HOST}/predict`, null);
-
-  const {
     data: responseData,
     loading: isQuestionLoading,
     fetchData: fetchAnswer,
   } = useFetch<typeof response>(`${API_HOST}/predict`, null);
 
   useEffect(() => {
-    if (summaryData !== null) setSummary(summaryData);
-  }, [summaryData]);
-
-  useEffect(() => {
     if (responseData !== null) setResponse(responseData);
   }, [responseData]);
-
-  const handleSummary = () => {
-    if (pageInfo) {
-      fetchSummary({ text: `以下の情報を要約して: ${pageInfo.content}` });
-    }
-  };
 
   const handleQuestion = () => {
     if (pageInfo && question) {
@@ -54,44 +38,22 @@ export const SidePanel: React.FC = () => {
   };
 
   const [cards, setCards] = React.useState<CardProps[]>([
-    { id: "1", type: "Summary", pageInfo, content: "漸く要約", hasGenerated: true },
+    {
+      id: "1",
+      type: "Summary",
+      pageInfo,
+    },
     { id: "3", type: "Question", pageInfo, model: "ahiahi" },
   ]);
 
+  useEffect(() => {
+    if (pageInfo == null) return;
+    setCards(cards.map((card) => ({ ...card, pageInfo })));
+  }, [pageInfo]);
+
   return (
     <>
-      <div style={{ maxWidth: 400, margin: "30px auto" }}>
-        <SortableList
-          items={cards}
-          onChange={setCards}
-          renderItem={(item) => (
-            <SortableList.Item id={item.id}>
-              {renderCard(item)}
-              <SortableList.DragHandle />
-            </SortableList.Item>
-          )}
-        />
-      </div>
-    </>
-  );
-  return (
-    <div>
       <SidePanelHeader />
-      {pageInfo && (
-        <div>
-          {!isSummaryLoading && !summary && (
-            <button onClick={handleSummary}>要約する</button>
-          )}
-          {isSummaryLoading && <p>要約中・・・</p>}
-        </div>
-      )}
-      {summary && (
-        <div>
-          <h2>要約</h2>
-          <p>{summary}</p>
-          <button onClick={handleSummary}>再要約する</button>
-        </div>
-      )}
       <div>
         <h2>質問する</h2>
         <input
@@ -106,6 +68,18 @@ export const SidePanel: React.FC = () => {
         {isQuestionLoading && <p>考え中...</p>}
         {response && <p>{response}</p>}
       </div>
-    </div>
+      <div style={{ maxWidth: 400, margin: "30px auto" }}>
+        <SortableList
+          items={cards}
+          onChange={setCards}
+          renderItem={(item) => (
+            <SortableList.Item id={item.id}>
+              {renderCard(item)}
+              <SortableList.DragHandle />
+            </SortableList.Item>
+          )}
+        />
+      </div>
+    </>
   );
 };
