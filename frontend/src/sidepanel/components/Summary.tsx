@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardBase } from "./base";
 
-export type Summary = CardBase & {
+type Props = {
   content: string;
   hasGenerated: boolean;
-};
+}
 
-export const SummaryCard: React.FC<Summary> = ({ content, hasGenerated }) => {
+export const SummaryCard: React.FC<Props> = ({}) => {
+  const [summaryText, setSummaryText] = useState("ここに要約が入ります");
+
+  const onClick = () => {
+    setSummaryText("要約しました。");
+  }
+
   return (
     <Card title="要約">
       <div
@@ -22,8 +28,13 @@ export const SummaryCard: React.FC<Summary> = ({ content, hasGenerated }) => {
           borderRadius: "4px",
         }}
       >
-        {hasGenerated ? content : "ここに要約が入ります"}
+        {summaryText}
       </div>
+      <button onClick={onClick}>要約する</button>
     </Card>
   );
+};
+
+export type Summary = CardBase & Props & {
+  type: "Summary"
 };
