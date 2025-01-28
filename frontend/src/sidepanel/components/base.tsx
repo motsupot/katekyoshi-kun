@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseItem } from "../../shared/components/SortableList/SortableList";
 
-type CardType = "Summary" | "Quiz";
+type CardType = "Summary" | "Question" | "Quiz";
 
 export type CardBase = BaseItem & {
   type: CardType;

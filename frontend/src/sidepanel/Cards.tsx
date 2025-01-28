@@ -1,8 +1,7 @@
 import React from "react";
 import { SortableList } from "../shared/components/SortableList/SortableList";
 import { Card } from "./components/base";
-import { SummaryCard } from "./components/Summary";
-import { CardProps } from "./components";
+import { CardProps, renderCard } from "./components";
 
 const ImageCard: React.FC<{ imageUrl: string; caption: string }> = ({
   imageUrl,
@@ -63,39 +62,8 @@ const ChatCard: React.FC<{ links: string[] }> = ({ links }) => {
 const CardList: React.FC = () => {
   const [cards, setCards] = React.useState<CardProps[]>([
     { id: "1", type: "Summary", content: "漸く要約", hasGenerated: true },
-    { id: "2", type: "Summary", content: "要約??", hasGenerated: false }
-    // {
-    //   id: "2",
-    //   component: (
-    //     <ImageCard
-    //       imageUrl="https://avatars.githubusercontent.com/u/19949534?v=4"
-    //       caption="表示している部分について図示"
-    //     />
-    //   ),
-    // },
-    // {
-    //   id: "3",
-    //   component: <QuizCard quizText="ページ全体についてクイズ出題。" />,
-    // },
-    // {
-    //   id: "4",
-    //   component: (
-    //     <ChatCard
-    //       links={[
-    //         "関連ページ情報その1",
-    //         "関連ページ情報その2",
-    //         "関連ページ情報その3",
-    //       ]}
-    //     />
-    //   ),
-    // },
+    { id: "3", type: "Question", model: "ahiahi" },
   ]);
-
-  const renderCard = ({ type, ...props}: CardProps) => {
-    switch (type) {
-      case "Summary": return <SummaryCard {...props} />
-    }
-  }
 
   return (
     <>

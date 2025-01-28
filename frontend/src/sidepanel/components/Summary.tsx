@@ -4,14 +4,14 @@ import { Card, CardBase } from "./base";
 type Props = {
   content: string;
   hasGenerated: boolean;
-}
+};
 
 export const SummaryCard: React.FC<Props> = ({}) => {
   const [summaryText, setSummaryText] = useState("ここに要約が入ります");
 
   const onClick = () => {
     setSummaryText("要約しました。");
-  }
+  };
 
   return (
     <Card title="要約">
@@ -35,6 +35,7 @@ export const SummaryCard: React.FC<Props> = ({}) => {
   );
 };
 
-export type Summary = CardBase & Props & {
-  type: "Summary"
-};
+export type Summary = CardBase &
+  Props & {
+    type: "Summary";
+  };
