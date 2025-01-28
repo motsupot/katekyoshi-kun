@@ -18,7 +18,7 @@ import "./SortableList.css";
 import { SortableOverlay } from "./components/SortableOverlay/SortableOverlay";
 import { DragHandle, SortableItem } from "./components/SortableItem/SortableItem";
 
-interface BaseItem {
+export interface BaseItem {
   id: UniqueIdentifier;
 }
 
