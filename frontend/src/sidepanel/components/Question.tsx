@@ -6,7 +6,6 @@ import { API_HOST } from "../../constants";
 
 type Props = {
   pageInfo: PageInfo | null;
-  model: string;
 };
 
 export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
@@ -53,7 +52,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
           borderRadius: "4px",
         }}
       >
-        {isQuestionLoading ? "考え中..." : (answer ?? "ここに回答が入ります")}
+        {isQuestionLoading ? "考え中..." : answer ?? "ここに回答が入ります"}
       </div>
     </Card>
   );
