@@ -26,6 +26,9 @@
     "vite": "^5.2.0"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@lexical/react": "^0.23.1",
     "katekyoshi-kun": "file:",
     "lexical": "^0.23.1",
