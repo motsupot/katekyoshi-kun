@@ -17,7 +17,7 @@ export const usePageInfo = (onPageChange: () => void) => {
     return () => {
       chrome.runtime.onMessage.removeListener(handleMessage);
     };
-  }, [onPageChange]);
+  }, [onPageChange, pageInfo]);
 
   return pageInfo;
 };
