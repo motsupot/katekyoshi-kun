@@ -22,7 +22,7 @@ export const usePageInfo = (onPageChange: () => void) => {
   return pageInfo;
 };
 
-export const useFetch = <T> (url: string, defaultState: T) => {
+export const useFetch = <T>(url: string, defaultState: T) => {
   const [data, setData] = useState(defaultState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

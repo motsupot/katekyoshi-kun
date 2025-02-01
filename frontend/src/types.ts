@@ -1,5 +1,5 @@
 export type MessageActionsId = {
-  action: 'get-zenn-articles';
+  action: "get-zenn-articles";
 };
 
 export type ZennArticleData = {

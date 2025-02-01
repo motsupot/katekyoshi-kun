@@ -4,7 +4,7 @@ export const Page: React.FC<{
   selectedText: string | null;
 }> = ({ selectedText }) => {
   const [question, setQuestion] = useState<string>(
-    selectedText ?? "なっしんぐ"
+    selectedText ?? "なっしんぐ",
   );
 
   const onClick = () => {
