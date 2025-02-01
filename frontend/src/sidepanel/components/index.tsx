@@ -14,6 +14,6 @@ export const renderCard = (props: CardProps) => {
     return <SummaryCard {...props} />;
   }
   if (isQuestion(props)) {
-    return <QuestionCard {...props} />
+    return <QuestionCard {...props} />;
   }
 };

@@ -33,12 +33,12 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
 
   return (
     <Card title="質問する">
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="質問を入力してください"
-        />
+      <input
+        type="text"
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="質問を入力してください"
+      />
       <button onClick={handleQuestion}>質問する</button>
       <div
         style={{
@@ -53,7 +53,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
           borderRadius: "4px",
         }}
       >
-        {isQuestionLoading ? "考え中..." : answer ?? "ここに回答が入ります"}
+        {isQuestionLoading ? "考え中..." : (answer ?? "ここに回答が入ります")}
       </div>
     </Card>
   );

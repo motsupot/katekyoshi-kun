@@ -44,12 +44,12 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
       >
         {(() => {
           if (isSummaryLoading) {
-            return <p>要約中・・・</p>
+            return <p>要約中・・・</p>;
           }
           if (!summary) {
-            return <p>ここに要約が入ります</p>
+            return <p>ここに要約が入ります</p>;
           }
-          return <p>{summary}</p>
+          return <p>{summary}</p>;
         })()}
       </div>
       <button onClick={onClickSummary}>{summary ? "再" : ""}要約する</button>
