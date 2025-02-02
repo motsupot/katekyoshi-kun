@@ -63,7 +63,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
       ]);
       // 作成したプロンプト文字列を送信する
       const prompt = buildPrompt(currentQuestion.trim());
-      fetchAnswer({ text: prompt });
+      fetchAnswer({ text: prompt, chat_type: "question" });
       // 入力欄をクリア
       setCurrentQuestion("");
     }
