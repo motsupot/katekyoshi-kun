@@ -24,7 +24,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     data: responseData,
     loading: isQuestionLoading,
     fetchData: fetchAnswer,
-  } = useFetch<string>(`${API_HOST}/predict`, "");
+  } = useFetch<string | null>(`${API_HOST}/predict`, null);
 
   // APIからの回答が返ってきたら、会話履歴に追加
   useEffect(() => {
@@ -38,19 +38,16 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
 
   // 会話履歴からプロンプト文字列を作成
   const buildPrompt = (newQuestion: string) => {
-    // 例として、過去のやり取りを「ユーザー」と「アシスタント」で表記
     const historyText = chatHistory
       .map(
         (msg) =>
           `${msg.role === "user" ? "ユーザー" : "アシスタント"}: ${msg.content}`
       )
       .join("\n");
-    // ページ情報を含める場合は、末尾に追加する
     const pageInfoText = pageInfo ? `\n参考情報: ${pageInfo.content}` : "";
-    // 新しい質問を追加
     const prompt = historyText
-      ? `${historyText}\nユーザー: ${newQuestion}\nアシスタント:`
-      : `ユーザー: ${newQuestion}\nアシスタント:`;
+      ? `${historyText}\nユーザー: ${newQuestion}`
+      : `ユーザー: ${newQuestion}`;
     return prompt + pageInfoText;
   };
 
