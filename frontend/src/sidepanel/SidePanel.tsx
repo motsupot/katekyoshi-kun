@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { CardProps, renderCard } from "./components";
 import { SortableList } from "../shared/components/SortableList/SortableList";
 import { usePageInfo } from "../shared/hooks";
@@ -6,25 +6,22 @@ import { usePageInfo } from "../shared/hooks";
 const SidePanelHeader: React.FC = () => <h1>AI家庭教師くん（サイドパネル）</h1>;
 
 export const SidePanel: React.FC = () => {
-  const [, setQuestion] = useState<string>("");
-  const [, setSummary] = useState<string | null>(null);
-  const [, setResponse] = useState<string | null>(null);
-
   const resetStates = () => {
-    setSummary(null);
-    setResponse(null);
-    setQuestion("");
+    setCards([]); // 一度空配列にしてリセットを明示的にする
+
+    setTimeout(() => {
+      setCards([
+        { id: "1", type: "Summary", pageInfo },
+        { id: "2", type: "Question", pageInfo },
+      ]);
+    }, 0); // 次のレンダリングタイミングで状態を更新
   };
 
   const pageInfo = usePageInfo(resetStates);
 
   const [cards, setCards] = React.useState<CardProps[]>([
-    {
-      id: "1",
-      type: "Summary",
-      pageInfo,
-    },
-    { id: "3", type: "Question", pageInfo, model: "ahiahi" },
+    { id: "1", type: "Summary", pageInfo },
+    { id: "2", type: "Question", pageInfo },
   ]);
 
   useEffect(() => {
@@ -35,6 +32,9 @@ export const SidePanel: React.FC = () => {
   return (
     <>
       <SidePanelHeader />
+      <div>
+        <button onClick={resetStates}>リセット</button>
+      </div>
       <div style={{ maxWidth: 400, margin: "30px auto" }}>
         <SortableList
           items={cards}
