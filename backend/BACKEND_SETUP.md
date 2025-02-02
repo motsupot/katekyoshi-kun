@@ -13,7 +13,7 @@
 
 ## 起動
 
-`uvicorn main:app --reload --port 8888`
+`uvicorn app.main:app --reload --port 8888`
 
 ## リクエスト
 
