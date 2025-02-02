@@ -1,3 +1,5 @@
+from typing import Literal, Optional
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from google.cloud import aiplatform, firestore
@@ -34,6 +36,7 @@ db = firestore.Client()
 # リクエストボディのモデル定義
 class PredictRequest(BaseModel):
     text: str
+    chat_type: Optional[Literal["summary", "question", "quiz"]] = "none"
 
 @app.get("/")
 def read_root():
@@ -41,25 +44,35 @@ def read_root():
 
 @app.post("/predict")
 async def predict(request: PredictRequest):
-    # エンドポイントの取得
     model = GenerativeModel("gemini-1.5-flash-002")
 
     response = model.generate_content(request.text)
-    print(response.text) #  The opposite of hot is cold.
+    print(response.text)
 
     # レスポンスの取得
     predictions = response.text
 
     # Firestoreに質問と回答を保存(一旦、ユーザーIDは固定)
-    save_question_and_answer(request.text, predictions, "user123")
+    save_question_and_answer(
+        chat_type=request.chat_type,
+        question=request.text,
+        answer=predictions,
+        user="user123"
+    )
 
     return {"predictions": predictions}
 
-def save_question_and_answer(question: str, answer: str, user: str):
+def save_question_and_answer(
+        chat_type: str,
+        question: str,
+        answer: str,
+        user: str
+    ):
     # コレクション「qa_sessions」に新しいドキュメントを作成
     doc_ref = db.collection('qa_sessions').document()
     # ドキュメントにデータを保存
     doc_ref.set({
+        'type': chat_type,
         'question': question,
         'answer': answer,
         'user': user,
