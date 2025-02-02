@@ -16,6 +16,7 @@ export const Card: React.FC<{ title: string; children: React.ReactNode }> = ({
       style={{
         padding: "16px",
         backgroundColor: "#f9f9f9",
+        width: "100%",
       }}
     >
       <h3
