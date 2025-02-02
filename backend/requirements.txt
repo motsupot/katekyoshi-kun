@@ -3,3 +3,4 @@ uvicorn[standard]
 pydantic
 google-cloud-aiplatform
 vertexai
+google-cloud-firestore
