@@ -20,13 +20,11 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     return `dist/page/index.html?selected_text=${selectionText}`;
   })(info.selectionText);
   if (info.selectionText)
-  chrome.tabs
-    .create({ url })
-    .catch((err) => console.log(err));
+    chrome.tabs.create({ url }).catch((err) => console.log(err));
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.active) {
+  if (changeInfo.status === "complete" && tab.active) {
     chrome.scripting.executeScript({
       target: { tabId: tabId },
       func: () => {

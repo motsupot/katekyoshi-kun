@@ -23,7 +23,7 @@ export const Popup: React.FC = () => {
           const selectedText =
             injectionResults?.[0]?.result || "No text selected.";
           setQuestion(selectedText);
-        }
+        },
       );
     });
   }, []);
