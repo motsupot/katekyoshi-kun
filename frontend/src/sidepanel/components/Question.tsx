@@ -20,6 +20,8 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
   // 会話の履歴（ユーザーとアシスタントの発言を管理）
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
 
+  const [chatId, setChatId] = useState<string | null>(null);
+
   const {
     data: responseData,
     loading: isQuestionLoading,
@@ -36,19 +38,30 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     }
   }, [responseData]);
 
-  // 会話履歴からプロンプト文字列を作成
-  const buildPrompt = (newQuestion: string) => {
+  useEffect(() => {
+    if (crypto.randomUUID) {
+      // ブラウザが対応している場合はcrypto.randomUUIDを使用
+      setChatId(crypto.randomUUID());
+    } else {
+      // 対応していない場合は簡易的なUUID生成ロジックを使用
+      setChatId(
+        "xxxxxxxx-xxxx-7xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          const r = (Math.random() * 16) | 0;
+          const v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        })
+      );
+    }
+  }, []);
+
+  const buildHistory = () => {
     const historyText = chatHistory
       .map(
         (msg) =>
           `${msg.role === "user" ? "ユーザー" : "アシスタント"}: ${msg.content}`
       )
       .join("\n");
-    const pageInfoText = pageInfo ? `\n参考情報: ${pageInfo.content}` : "";
-    const prompt = historyText
-      ? `${historyText}\nユーザー: ${newQuestion}`
-      : `ユーザー: ${newQuestion}`;
-    return prompt + pageInfoText;
+    return historyText;
   };
 
   const handleQuestion = () => {
@@ -58,9 +71,14 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
         ...prev,
         { role: "user", content: currentQuestion.trim() },
       ]);
-      // 作成したプロンプト文字列を送信する
-      const prompt = buildPrompt(currentQuestion.trim());
-      fetchAnswer({ text: prompt, chat_type: "question" });
+      fetchAnswer({
+        chat_history: buildHistory(),
+        question: currentQuestion.trim(),
+        chat_id: chatId,
+        url: pageInfo.url,
+        title: pageInfo.title,
+        page_info: pageInfo.content,
+      });
       // 入力欄をクリア
       setCurrentQuestion("");
     }
