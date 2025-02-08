@@ -1,4 +1,5 @@
 import React from "react";
+import Markdown from "react-markdown";
 
 export const Question = ({
   questionText,
@@ -15,5 +16,10 @@ export const Question = ({
   if (questionText == null) {
     return <button onClick={handleMakeQuestion}>出題する</button>;
   }
-  return <div>問題：{questionText}</div>;
+  return (
+    <div>
+      問題：
+      <Markdown>{questionText}</Markdown>
+    </div>
+  );
 };

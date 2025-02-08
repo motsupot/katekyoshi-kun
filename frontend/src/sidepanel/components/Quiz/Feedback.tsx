@@ -1,4 +1,5 @@
 import React from "react";
+import Markdown from "react-markdown";
 
 export const Feedback = ({
   feedback,
@@ -13,5 +14,9 @@ export const Feedback = ({
   if (feedback == null) {
     return <></>;
   }
-  return <div>採点結果：{feedback}</div>;
+  return (
+    <div>
+      採点結果：<Markdown>{feedback}</Markdown>
+    </div>
+  );
 };

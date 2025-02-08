@@ -3,6 +3,7 @@ import { Card, CardBase } from "./base";
 import { PageInfo } from "../../types/Page";
 import { useFetch } from "../../shared/hooks";
 import { API_HOST } from "../../constants";
+import Markdown from "react-markdown";
 
 type Props = {
   pageInfo: PageInfo | null;
@@ -52,7 +53,11 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
           if (!summary) {
             return <p>ここに要約が入ります</p>;
           }
-          return <p>{summary}</p>;
+          return (
+            <p>
+              <Markdown>{summary}</Markdown>
+            </p>
+          );
         })()}
       </div>
       <button onClick={onClickSummary}>{summary ? "再" : ""}要約する</button>
