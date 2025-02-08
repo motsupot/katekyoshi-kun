@@ -52,7 +52,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     if (pageInfo && questionText) {
       fetchFeedback({
         text: buildFeedbackPrompt(pageInfo.content, questionText, answerText),
-        chat_type: "quiz",
+        chat_type: "scoring",
       });
     }
   };
