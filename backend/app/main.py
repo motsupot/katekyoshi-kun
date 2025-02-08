@@ -82,3 +82,15 @@ def save_question_and_answer(
         'user': user,
         'timestamp': firestore.SERVER_TIMESTAMP
     })
+
+@app.get("/data")
+async def get_data():
+    # Firestoreの"qa_sessions"コレクションから全ドキュメントを取得
+    docs = db.collection("qa_sessions").stream()
+    print(docs)
+    sessions = []
+    for doc in docs:
+        data = doc.to_dict()
+        # timestampなどのFirestore特有のオブジェクトは必要に応じて変換する
+        sessions.append(data)
+    return {"qa_sessions": sessions}

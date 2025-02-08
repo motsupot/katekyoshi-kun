@@ -1,32 +1,50 @@
-import React, { ChangeEventHandler, useState } from "react";
+import React, { useEffect } from "react";
+import { useFetchData } from "../shared/hooks";
+import { API_HOST } from "../constants";
 
-export const Page: React.FC<{
-  selectedText: string | null;
-}> = ({ selectedText }) => {
-  const [question, setQuestion] = useState<string>(
-    selectedText ?? "なっしんぐ",
+export const Page: React.FC = () => {
+  const { data, loading, error, fetchData } = useFetchData<any[]>(
+    `${API_HOST}/data`,
+    []
   );
 
-  const onClick = () => {
-    alert("押され番長");
-  };
-
-  const onQuestionChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setQuestion(e.target.value);
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
-    <>
+    <div>
       <h1>AI家庭教師くん</h1>
-      <textarea
-        id="question"
-        placeholder="質問を入力してください~~"
-        value={question}
-        onChange={onQuestionChange}
-      ></textarea>
-      <button id="askButton">質問する</button>
-      <div id="response"></div>
-      <button onClick={onClick} />
-    </>
+      <h2>データ一覧</h2>
+
+      {loading && <p>データを取得中...</p>}
+      {error && <p>エラー: {error}</p>}
+
+      {!loading && !error && data.length > 0 ? (
+        <ul>
+          {data.map((item, index) => (
+            <li
+              key={index}
+              style={{ marginBottom: "1rem", borderBottom: "1px solid #ccc" }}
+            >
+              <p>
+                <strong>質問:</strong> {item.question}
+              </p>
+              <p>
+                <strong>回答:</strong> {item.answer}
+              </p>
+              <p>
+                <strong>タイプ:</strong> {item.type}
+              </p>
+              <p>
+                <strong>ユーザー:</strong> {item.user}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>データがありません。</p>
+      )}
+    </div>
   );
 };
