@@ -1,12 +1,8 @@
 import React, { useEffect } from "react";
 import { useFetchData } from "../shared/hooks";
-import { API_HOST } from "../constants";
 
 export const Page: React.FC = () => {
-  const { data, loading, error, fetchData } = useFetchData<any[]>(
-    `${API_HOST}/data`,
-    []
-  );
+  const { data, loading, error, fetchData } = useFetchData<any[]>([]);
 
   useEffect(() => {
     fetchData();

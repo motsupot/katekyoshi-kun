@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageInfo } from "../../types/Page";
 import { getUserId } from "../functions/getUserId";
+import { API_HOST } from "../../constants";
 
 export const usePageInfo = (onPageChange: () => void) => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
@@ -63,7 +64,7 @@ export const useFetch = <T>(url: string, defaultState: T) => {
   return { data, loading, error, fetchData };
 };
 
-export const useFetchData = <T>(url: string, defaultState: T) => {
+export const useFetchData = <T>(defaultState: T) => {
   const [data, setData] = useState<T>(defaultState);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +74,11 @@ export const useFetchData = <T>(url: string, defaultState: T) => {
     setError(null);
 
     try {
-      const response = await fetch(url, {
+      // ユーザーIDを取得
+      const userId = await getUserId();
+
+      // データを取得
+      const response = await fetch(`${API_HOST}/data?user_id=${userId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -83,8 +88,7 @@ export const useFetchData = <T>(url: string, defaultState: T) => {
       }
 
       const result = await response.json();
-      // エンドポイントから返されたデータが{ qa_sessions: [...] }の場合
-      setData(result.qa_sessions || defaultState);
+      setData(result.qa_sessions || []);
     } catch (err: any) {
       console.error("Error fetching data:", err);
       setError("エラーが発生しました。");
