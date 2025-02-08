@@ -3,7 +3,6 @@ import { Card, CardBase } from "./base";
 import { PageInfo } from "../../types/Page";
 import { useFetch } from "../../shared/hooks";
 import { API_HOST } from "../../constants";
-import { url } from "inspector";
 
 // メッセージの型定義
 type Message = {
