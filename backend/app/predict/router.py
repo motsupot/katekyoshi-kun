@@ -23,7 +23,7 @@ async def predict_summary(request: PredictSummaryRequest):
     # レスポンスの取得
     predictions = response.text
 
-    summary = Summary(user_id=request.user_id, url=request.url, body=predictions)
+    summary = Summary(user_id=request.user_id, url=request.url, body=predictions, title=request.title)
     summary.save()
 
     return dict(predictions=predictions)
