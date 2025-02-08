@@ -99,3 +99,35 @@ export const useFetchData = <T>(defaultState: T) => {
 
   return { data, loading, error, fetchData };
 };
+
+export const useBookmark = (type: "summary" | "question" | "quiz") => {
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+  const [isRegistering, setIsRegistering] = useState<boolean>(false);
+  const [bookmarkId, setBookmarkId] = useState<boolean>(false);
+
+  const registerBookmark = (contentId: string) => {
+    setIsRegistering(true);
+    getUserId()
+      .then((userId) =>
+        fetch(`${API_HOST}/bookmarks/${type}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: contentId,
+            user_id: userId,
+          }),
+        })
+      )
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        setIsBookmarked(true);
+        return res.json();
+      })
+      .then((result) => setBookmarkId(result.id))
+      .finally(() => setIsRegistering(false));
+  };
+
+  return { isBookmarked, isRegistering, bookmarkId, registerBookmark };
+};

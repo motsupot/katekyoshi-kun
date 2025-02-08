@@ -12,6 +12,7 @@ type Props = {
 export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   const [summary, setSummary] = useState<string | null>(null);
   const [summaryId, setSummaryId] = useState<string | null>(null);
+  const [isBookmarked, setIsBookmarked] = useState()
 
   const {
     data: summaryData,
@@ -38,6 +39,13 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
       title: pageInfo.title,
     });
   };
+
+  const onBookmark = () => {
+    if (summaryId == null) {
+      console.error("要約IDが存在しません.");
+      return;
+    }
+  }
 
   return (
     <Card title="要約">
@@ -69,6 +77,7 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
         })()}
       </div>
       <button onClick={onClickSummary}>{summary ? "再" : ""}要約する</button>
+      {summary && <button onClick={onBookmark}>ブックマークに追加</button>}
     </Card>
   );
 };
