@@ -28,14 +28,22 @@ async def predict_summary(request: PredictSummaryRequest):
 
     return dict(predictions=predictions)
 
-
 @router.post("/question")
 async def predict_question(request: PredictQuestion):
     model = GenerativeModel("gemini-1.5-flash-002")
-    prompt = request.text
+
+    # プロンプトテンプレートを定義して読みやすくする
+    prompt = (
+        f"参考情報：\n{request.page_info}\n"
+        f"これまでの会話内容：\n{request.chat_history}\n"
+        "上記の会話内容を踏まえて、アシスタントとして以下の質問に回答せよ。\n"
+        f"質問：{request.question}"
+    )
+    
+    print("生成プロンプト:\n", prompt)
 
     response = model.generate_content(prompt)
-    print(prompt)
+    print("レスポンス:\n", prompt)
 
     # レスポンスの取得
     predictions = response.text
