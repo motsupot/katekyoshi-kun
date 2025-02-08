@@ -1,7 +1,7 @@
 import React from "react";
 import { Question, QuestionCard } from "./Question";
 import { Summary, SummaryCard } from "./Summary";
-import { Quiz, QuizCard } from "./Quiz";
+import { Quiz, QuizCard } from "./Quiz/Quiz";
 
 export type CardProps = Summary | Question | Quiz;
 
@@ -19,6 +19,6 @@ export const renderCard = (props: CardProps) => {
     return <QuestionCard {...props} />;
   }
   if (isQuiz(props)) {
-    return <QuizCard {...props} />
+    return <QuizCard {...props} />;
   }
 };

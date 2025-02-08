@@ -1,119 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { PageInfo } from "../../types/Page";
-import { Card, CardBase } from "./base";
-import { useFetch } from "../../shared/hooks";
-import { API_HOST } from "../../constants";
+import { PageInfo } from "../../../types/Page";
 
-type Props = {
-  pageInfo: PageInfo | null;
-};
-
-export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
-  const [questionText, setQuestionText] = useState<string | null>(null);
-  const [answerText, setAnswerText] = useState<string>("");
-  const [feedback, setFeedback] = useState<string | null>(null);
-
-  // クイズの問題を取得.
-  const {
-    data: resQuestion,
-    loading: isQuestionLoading,
-    fetchData: fetchQuestion,
-  } = useFetch<string | null>(`${API_HOST}/predict`, null);
-
-  useEffect(() => {
-    if (resQuestion != null) setQuestionText(resQuestion);
-  }, [resQuestion]);
-
-  // 解答に対する答え合わせ（フィードバック）
-  const {
-    data: resFeedback,
-    loading: isFeedbackLoading,
-    fetchData: fetchFeedback,
-  } = useFetch<string | null>(`${API_HOST}/predict`, null);
-
-  useEffect(() => {
-    if (resFeedback != null) setFeedback(resFeedback);
-  }, [resFeedback]);
-
-  const handleMakeQuestion = () => {
-    if (pageInfo) {
-      fetchQuestion({
-        text: buildQuestionPrompt(pageInfo.content),
-        chat_type: "quiz",
-      });
-    }
-  };
-
-  const handleAnswer = () => {
-    if (pageInfo && questionText) {
-      fetchFeedback({
-        text: buildFeedbackPrompt(pageInfo.content, questionText, answerText),
-        chat_type: "quiz",
-      });
-    }
-  };
-
-  return (
-    <Card title="クイズで理解度チェック">
-      <Question
-        questionText={questionText}
-        isQuestionLoading={isQuestionLoading}
-        handleMakeQuestion={handleMakeQuestion}
-      ></Question>
-      <textarea
-        value={answerText}
-        disabled={questionText == null}
-        onChange={(e) => setAnswerText(e.target.value)}
-        placeholder="解答を入力してください"
-        rows={6}
-        style={{ width: "100%", marginBottom: "4px" }}
-      />
-      <button onClick={handleAnswer}>解答する</button>
-      <Feedback feedback={feedback} isFeedbackLoading={isFeedbackLoading} ></Feedback>
-    </Card>
-  );
-};
-
-const Question = ({
-  questionText,
-  isQuestionLoading,
-  handleMakeQuestion,
-}: {
-  questionText: string | null;
-  isQuestionLoading: boolean;
-  handleMakeQuestion: () => void;
-}) => {
-  if (isQuestionLoading) {
-    return <div>問題を作成中...</div>;
-  }
-  if (questionText == null) {
-    return <button onClick={handleMakeQuestion}>出題する</button>;
-  }
-  return <div>問題：{questionText}</div>;
-};
-
-const Feedback = ({
-  feedback,
-  isFeedbackLoading
-}:{
-  feedback: string | null;
-  isFeedbackLoading: boolean
-}) => {
-  if (isFeedbackLoading) {
-    return <div>解答を採点中...</div>
-  }
-  if (feedback == null) {
-    return <></>
-  }
-  return <div>採点結果：{feedback}</div>
-}
-
-export type Quiz = CardBase &
-  Props & {
-    type: "Quiz";
-  };
-
-const buildQuestionPrompt = (pageContent: PageInfo["content"]): string => {
+export const buildQuestionPrompt = (pageContent: PageInfo["content"]): string => {
   return `
 指示:
 
@@ -141,7 +28,7 @@ ${pageContent}
 `;
 };
 
-const buildFeedbackPrompt = (
+export const buildFeedbackPrompt = (
   pageContent: PageInfo["content"],
   question: string,
   answer: string
