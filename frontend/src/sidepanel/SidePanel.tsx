@@ -22,6 +22,7 @@ export const SidePanel: React.FC = () => {
   const [cards, setCards] = React.useState<CardProps[]>([
     { id: "1", type: "Summary", pageInfo },
     { id: "2", type: "Question", pageInfo },
+    { id: "3", type: "Quiz", pageInfo },
   ]);
 
   useEffect(() => {
