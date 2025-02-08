@@ -36,6 +36,7 @@ db = firestore.Client()
 # リクエストボディのモデル定義
 class PredictRequest(BaseModel):
     text: str
+    user_id: str
     chat_type: Optional[Literal["summary", "question", "quiz"]] = "none"
 
 @app.get("/")
@@ -45,9 +46,10 @@ def read_root():
 @app.post("/predict")
 async def predict(request: PredictRequest):
     model = GenerativeModel("gemini-1.5-flash-002")
+    prompt = request.text
 
-    response = model.generate_content(request.text)
-    print(response.text)
+    response = model.generate_content(prompt)
+    print(prompt)
 
     # レスポンスの取得
     predictions = response.text
@@ -55,9 +57,9 @@ async def predict(request: PredictRequest):
     # Firestoreに質問と回答を保存(一旦、ユーザーIDは固定)
     save_question_and_answer(
         chat_type=request.chat_type,
-        question=request.text,
+        question=prompt,
         answer=predictions,
-        user="user123"
+        user=request.user_id
     )
 
     return {"predictions": predictions}

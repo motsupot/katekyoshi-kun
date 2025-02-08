@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PageInfo } from "../../types/Page";
+import { getUserId } from "../functions/getUserId";
 
 export const usePageInfo = (onPageChange: () => void) => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
@@ -32,10 +33,17 @@ export const useFetch = <T>(url: string, defaultState: T) => {
     setError(null);
 
     try {
+      const userId = await getUserId();
+
+      const requestBody = {
+        ...body,
+        user_id: userId,
+      };
+
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
