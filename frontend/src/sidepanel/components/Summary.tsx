@@ -25,7 +25,8 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   const onClickSummary = () => {
     if (pageInfo) {
       fetchSummary({
-        text: `以下の情報を要約して: ${pageInfo.content}`,
+        content: pageInfo.content,
+        url: window.location.href,
       });
     }
   };

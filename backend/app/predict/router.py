@@ -1,5 +1,5 @@
 from app.db import save_question_and_answer
-from app.model import PredictRequest
+from app.model import PredictRequest, PredictSummaryRequest, Summary
 from fastapi import APIRouter
 from vertexai.generative_models import GenerativeModel
 
@@ -13,9 +13,9 @@ async def get_all_bookmarks():
 
 
 @router.post("/summary")
-async def predict_summary(request: PredictRequest):
+async def predict_summary(request: PredictSummaryRequest):
     model = GenerativeModel("gemini-1.5-flash-002")
-    prompt = request.text
+    prompt = f"以下の情報を要約して:{request.content}"
 
     response = model.generate_content(prompt)
     print(prompt)
@@ -23,15 +23,10 @@ async def predict_summary(request: PredictRequest):
     # レスポンスの取得
     predictions = response.text
 
-    # Firestoreに質問と回答を保存(一旦、ユーザーIDは固定)
-    save_question_and_answer(
-        chat_type="summary",
-        question=prompt,
-        answer=predictions,
-        user=request.user_id
-    )
+    summary = Summary(user_id=request.user_id, url=request.url, body=predictions)
+    summary.save()
 
-    return {"predictions": predictions}
+    return dict(predictions=predictions)
 
 
 @router.post("/question")

@@ -35,3 +35,9 @@ class Summary(BaseModel):
 class PredictRequest(BaseModel):
     text: str
     user_id: str
+
+
+class PredictSummaryRequest(BaseModel):
+    user_id: str
+    content: str
+    url: str
