@@ -9,6 +9,7 @@ class Summary(BaseModel):
     url: str
     user_id: str
     body: str
+    title: str
 
     def save(self):
         # コレクション「qa_sessions」に新しいドキュメントを作成
@@ -18,6 +19,7 @@ class Summary(BaseModel):
             'url': self.url,
             'user_id': self.user_id,
             'body': self.body,
+            'title': self.title,
             'timestamp': firestore.SERVER_TIMESTAMP
         })
         return doc_ref.id
@@ -43,6 +45,7 @@ class PredictSummaryRequest(BaseModel):
     user_id: str
     content: str
     url: str
+    title: str
 
 
 class ChatType(str, Enum):
