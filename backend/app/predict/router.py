@@ -1,5 +1,5 @@
 from app.db import save_question_and_answer, save_chat
-from app.model import PredictRequest, PredictQuestion
+from app.model import PredictRequest, PredictQuestion, Conversation, Message
 from fastapi import APIRouter
 from vertexai.generative_models import GenerativeModel
 
@@ -51,6 +51,11 @@ async def predict_question(request: PredictQuestion):
     # レスポンスの取得
     predictions = response.text
 
+    conversation = Conversation(user_id=request.user_id, url=request.url, chat_id=request.chat_id, title=request.title)
+    conversation.save()
+    message = Message(user_id=request.user_id, chat_id=request.chat_id, input=request.question, output=predictions)
+    message.save()
+
     # Firestoreに質問と回答を保存(一旦、ユーザーIDは固定)
     save_chat(
         question=request.question,
@@ -61,7 +66,7 @@ async def predict_question(request: PredictQuestion):
         title=request.title
     )
 
-    return {"predictions": predictions}
+    return dict(predictions=predictions)
 
 
 @router.post("/quiz")
