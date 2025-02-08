@@ -1,4 +1,5 @@
 from typing import Literal, Optional
+import os
 
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -10,9 +11,10 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 # CORS設定の追加
+extension_id = os.environ.get("CHROME_EXTENSION_ID")
 origins = [
     "http://localhost",
-    "chrome-extension://[拡張機能のID]"  # 実際の拡張機能IDに置き換える
+    "chrome-extension://" + str(extension_id),
 ]
 
 app.add_middleware(
