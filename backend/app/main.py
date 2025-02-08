@@ -1,18 +1,17 @@
-from typing import Literal, Optional
-import os
-
-from fastapi import FastAPI
-from pydantic import BaseModel
-from google.cloud import aiplatform, firestore
-import vertexai
-from vertexai.generative_models import GenerativeModel
-from fastapi.middleware.cors import CORSMiddleware
 from app.bookmarks import router as bookmark_router
-from app.db import db
+from app.db import db, save_question_and_answer
+from app.predict import router as predict_router
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from google.cloud import aiplatform
+from pydantic import BaseModel
+from vertexai.generative_models import GenerativeModel
+import os
 
 app = FastAPI()
 
 app.include_router(router=bookmark_router, prefix="/bookmarks")
+app.include_router(router=predict_router, prefix="/predict")
 
 # CORS設定の追加
 extension_id = os.environ.get("CHROME_EXTENSION_ID")
@@ -41,11 +40,7 @@ aiplatform.init(project=PROJECT_ID, location=LOCATION)
 class PredictRequest(BaseModel):
     text: str
     user_id: str
-    chat_type: Optional[Literal["summary", "question", "quiz", "scoring", "none"]] = "none"
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
 
 @app.post("/predict")
 async def predict(request: PredictRequest):
@@ -68,22 +63,6 @@ async def predict(request: PredictRequest):
 
     return {"predictions": predictions}
 
-def save_question_and_answer(
-        chat_type: str,
-        question: str,
-        answer: str,
-        user: str
-    ):
-    # コレクション「qa_sessions」に新しいドキュメントを作成
-    doc_ref = db.collection('qa_sessions').document()
-    # ドキュメントにデータを保存
-    doc_ref.set({
-        'type': chat_type,
-        'question': question,
-        'answer': answer,
-        'user': user,
-        'timestamp': firestore.SERVER_TIMESTAMP
-    })
 
 @app.get("/data")
 async def get_user_data(user_id: str):
