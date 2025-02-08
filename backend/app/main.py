@@ -7,8 +7,11 @@ from google.cloud import aiplatform, firestore
 import vertexai
 from vertexai.generative_models import GenerativeModel, Image
 from fastapi.middleware.cors import CORSMiddleware
+from app.bookmarks import router as bookmark_router
 
 app = FastAPI()
+
+app.include_router(router=bookmark_router, prefix="/bookmarks")
 
 # CORS設定の追加
 extension_id = os.environ.get("CHROME_EXTENSION_ID")
