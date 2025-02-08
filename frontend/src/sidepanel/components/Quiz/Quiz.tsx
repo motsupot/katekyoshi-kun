@@ -3,7 +3,6 @@ import { PageInfo } from "../../../types/Page";
 import { Card, CardBase } from "../base";
 import { useFetch } from "../../../shared/hooks";
 import { API_HOST } from "../../../constants";
-import { buildFeedbackPrompt, buildQuestionPrompt } from "./prompt";
 import { Question } from "./Question";
 import { Feedback } from "./Feedback";
 import { Answer } from "./Answer";
@@ -52,8 +51,11 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   const handleAnswer = () => {
     if (pageInfo && questionText) {
       fetchFeedback({
-        text: buildFeedbackPrompt(pageInfo.content, questionText, answerText),
-        chat_type: "scoring",
+        url: pageInfo.url,
+        title: pageInfo.title,
+        page_info: pageInfo.content,
+        question: questionText,
+        answer: answerText,
       });
     }
   };

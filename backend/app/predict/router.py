@@ -1,5 +1,7 @@
+import re
+
 from app.db import save_question_and_answer
-from app.model import PredictRequest, PredictQuiz
+from app.model import PredictRequest, PredictQuiz, PredictScoring
 from fastapi import APIRouter
 from vertexai.generative_models import GenerativeModel
 
@@ -71,22 +73,20 @@ async def predict_quiz(request: PredictQuiz):
 
 
 @router.post("/scoring")
-async def predict_quiz(request: PredictRequest):
+async def predict_quiz(request: PredictScoring):
     model = GenerativeModel("gemini-1.5-flash-002")
-    prompt = request.text
+    prompt = request.build_prompt()
 
     response = model.generate_content(prompt)
     print(prompt)
 
     # レスポンスの取得
     predictions = response.text
+    
+    # predictionsからスコアを取得
+    score = int(re.search(r"## 得点:\s*(\d+)/100", predictions).group(1))    
 
-    # Firestoreに質問と回答を保存(一旦、ユーザーIDは固定)
-    save_question_and_answer(
-        chat_type="scoring",
-        question=prompt,
-        answer=predictions,
-        user=request.user_id
-    )
+    # DBに保存（）
+    request.save(score=score, explanation=predictions)
 
     return {"predictions": predictions}
