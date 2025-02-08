@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.bookmarks.model import SummaryDto
+from app.model import SummaryDto
 
 
 router = APIRouter()
