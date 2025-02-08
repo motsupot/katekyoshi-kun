@@ -27,7 +27,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   // 解答に対する答え合わせ（フィードバック）
   const {
     data: resFeedback,
-    loading: isFeekbackLoading,
+    loading: isFeedbackLoading,
     fetchData: fetchFeedback,
   } = useFetch<string | null>(`${API_HOST}/predict`, null);
 
@@ -69,7 +69,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
         style={{ width: "100%", marginBottom: "4px" }}
       />
       <button onClick={handleAnswer}>解答する</button>
-      <div>フィードバック：{feedback}</div>
+      <Feedback feedback={feedback} isFeedbackLoading={isFeedbackLoading} ></Feedback>
     </Card>
   );
 };
@@ -92,6 +92,22 @@ const Question = ({
   return <div>問題：{questionText}</div>;
 };
 
+const Feedback = ({
+  feedback,
+  isFeedbackLoading
+}:{
+  feedback: string | null;
+  isFeedbackLoading: boolean
+}) => {
+  if (isFeedbackLoading) {
+    return <div>解答を採点中...</div>
+  }
+  if (feedback == null) {
+    return <></>
+  }
+  return <div>採点結果：{feedback}</div>
+}
+
 export type Quiz = CardBase &
   Props & {
     type: "Quiz";
@@ -102,6 +118,7 @@ const buildQuestionPrompt = (pageContent: PageInfo["content"]): string => {
 指示:
 
 与えられたターゲットテキストの内容をもとに、読者の理解度を確認する自由記述形式のクイズを1問作成してください。
+出力は Markdown のフォーマットに従うこと.
 
 要件:
 
@@ -133,6 +150,7 @@ const buildFeedbackPrompt = (
 #指示:
 
 あなたは採点者です。「ターゲットテキスト」をもとに「問題」が出題されました。解答者の「解答」を評価し、以下の要素を含めて採点してください。
+出力は Markdown のフォーマットに従うこと.
 
 ## 得点 (100点満点で適切なスコアリングを設定)
 
@@ -142,12 +160,14 @@ const buildFeedbackPrompt = (
 
 ## 正しい部分
 
-解答のどの点がターゲットテキストと合致しているかを具体的に指摘
+解答のどの点がターゲットテキストと合致しているかを具体的に指摘。
+長くても400文字程度で出力する。
 
 ## 間違っている・不足している部分
 
 解答のどの点が間違っているか、または重要な情報が不足しているかを指摘
 必要に応じて、正しい答えの一例を示す
+長くても400文字程度で出力する。
 
 ## 改善点 (誤答や部分正解の場合)
 
