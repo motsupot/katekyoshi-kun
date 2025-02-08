@@ -5,9 +5,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from google.cloud import aiplatform, firestore
 import vertexai
-from vertexai.generative_models import GenerativeModel, Image
+from vertexai.generative_models import GenerativeModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.bookmarks import router as bookmark_router
+from app.db import db
 
 app = FastAPI()
 
@@ -35,8 +36,6 @@ LOCATION = "us-central1"
 # Vertex AIの初期化
 aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
-# Firestoreクライアントの作成
-db = firestore.Client()
 
 # リクエストボディのモデル定義
 class PredictRequest(BaseModel):

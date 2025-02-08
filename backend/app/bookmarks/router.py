@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.bookmarks.model import SummaryDto
 
 
 router = APIRouter()
@@ -11,12 +12,14 @@ async def get_all_bookmarks():
 
 @router.get("/{user_id}")
 async def get_bookmark_by_user_id(user_id: str):
-    return dict(user_id=user_id)
+    return dict(summaries=SummaryDto.find_by_user_id(user_id))
 
 
 @router.post("/summary")
-async def bookmark_summary():
-    return "AHI"
+async def bookmark_summary(summary: SummaryDto):
+    print(f"{summary=}")
+    summary.save()
+    return "summary saved"
 
 
 @router.post("/question")
