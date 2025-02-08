@@ -4,7 +4,7 @@ from app.db import db
 from google.cloud import firestore
 
 
-class SummaryDto(BaseModel):
+class Summary(BaseModel):
     url: str
     user_id: str
     body: str
@@ -25,9 +25,9 @@ class SummaryDto(BaseModel):
     def find(id: str):
         doc_ref = db.collection('summary').document(id)
         doc = doc_ref.get()
-        return SummaryDto.model_validate(doc.to_dict()) if doc.exists else None
+        return Summary.model_validate(doc.to_dict()) if doc.exists else None
 
 
     def find_by_user_id(user_id: str):
         docs = db.collection('summary').where('user_id', '==', user_id).stream()
-        return list(map(lambda doc: SummaryDto.model_validate(doc.to_dict()), docs))
+        return list(map(lambda doc: Summary.model_validate(doc.to_dict()), docs))
