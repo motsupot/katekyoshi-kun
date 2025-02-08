@@ -1,5 +1,4 @@
-from pydantic import BaseModel, Field
-import uuid
+from pydantic import BaseModel
 from app.db import db
 from google.cloud import firestore
 
@@ -31,3 +30,8 @@ class SummaryDto(BaseModel):
     def find_by_user_id(user_id: str):
         docs = db.collection('summary').where('user_id', '==', user_id).stream()
         return list(map(lambda doc: SummaryDto.model_validate(doc.to_dict()), docs))
+
+
+class PredictRequest(BaseModel):
+    text: str
+    user_id: str
