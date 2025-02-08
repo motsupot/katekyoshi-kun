@@ -36,7 +36,8 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
       console.log("現在のURL:", currentUrl);
       fetchSummary({
         content: pageInfo.content,
-        url: currentUrl,
+        url: currentUrl ?? "NO_URL",
+        title: pageInfo.title,
       });
     });
   };
