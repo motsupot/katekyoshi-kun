@@ -24,9 +24,9 @@ async def predict_summary(request: PredictSummaryRequest):
     predictions = response.text
 
     summary = Summary(user_id=request.user_id, url=request.url, body=predictions, title=request.title)
-    summary.save()
+    summary_id = summary.save()
 
-    return dict(predictions=predictions)
+    return dict(predictions=dict(result=summary, id=summary_id))
 
 
 @router.post("/question")

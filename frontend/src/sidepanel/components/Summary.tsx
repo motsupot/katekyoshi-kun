@@ -11,15 +11,20 @@ type Props = {
 
 export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   const [summary, setSummary] = useState<string | null>(null);
+  const [summaryId, setSummaryId] = useState<string | null>(null);
 
   const {
     data: summaryData,
     loading: isSummaryLoading,
     fetchData: fetchSummary,
-  } = useFetch<typeof summary>(`${API_HOST}/predict/summary`, null);
+  } = useFetch<{ result: string; id: string } | null>(`${API_HOST}/predict/summary`, null);
 
   useEffect(() => {
-    if (summaryData !== null) setSummary(summaryData);
+    if (summaryData !== null) {
+      console.log({ summaryData });
+      setSummary(summaryData.result);
+      setSummaryId(summaryData.id);
+    }
   }, [summaryData]);
 
   const onClickSummary = () => {
