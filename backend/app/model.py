@@ -7,6 +7,7 @@ class Summary(BaseModel):
     url: str
     user_id: str
     body: str
+    title: str
 
     def save(self):
         # コレクション「qa_sessions」に新しいドキュメントを作成
@@ -16,6 +17,7 @@ class Summary(BaseModel):
             'url': self.url,
             'user_id': self.user_id,
             'body': self.body,
+            'title': self.title,
             'timestamp': firestore.SERVER_TIMESTAMP
         })
         return doc_ref.id
@@ -35,6 +37,14 @@ class Summary(BaseModel):
 class PredictRequest(BaseModel):
     text: str
     user_id: str
+
+
+class PredictSummaryRequest(BaseModel):
+    user_id: str
+    content: str
+    url: str
+    title: str
+
 
 class PredictQuiz(BaseModel):
     user_id: str
@@ -69,7 +79,7 @@ class PredictScoring(BaseModel):
     page_info: str
     question: str
     answer: str
-    
+
     def save(self, score: int, explanation: str):
         # コレクション「quizzies」に新しいドキュメントを作成
         doc_ref = db.collection('quizzies').document()
@@ -85,8 +95,8 @@ class PredictScoring(BaseModel):
             'timestamp': firestore.SERVER_TIMESTAMP
         })
         return doc_ref.id
-        
-        
+
+
     def build_prompt(self):
         # tabで整形するとプロンプトが崩れるので、このままにします
         return f"""

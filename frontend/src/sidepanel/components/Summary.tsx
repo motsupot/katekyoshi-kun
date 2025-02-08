@@ -23,11 +23,15 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   }, [summaryData]);
 
   const onClickSummary = () => {
-    if (pageInfo) {
-      fetchSummary({
-        text: `以下の情報を要約して: ${pageInfo.content}`,
-      });
+    if (pageInfo == null) {
+      console.error("ページの内容が取得できませんでした.");
+      return;
     }
+    fetchSummary({
+      content: pageInfo.content,
+      url: pageInfo.url,
+      title: pageInfo.title,
+    });
   };
 
   return (
