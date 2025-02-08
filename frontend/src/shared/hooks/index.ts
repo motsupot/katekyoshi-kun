@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PageInfo } from "../../types/Page";
 import { getUserId } from "../functions/getUserId";
+import { API_HOST } from "../../constants";
 
 export const usePageInfo = (onPageChange: () => void) => {
   const [pageInfo, setPageInfo] = useState<PageInfo | null>(null);
@@ -52,6 +53,42 @@ export const useFetch = <T>(url: string, defaultState: T) => {
 
       const result = await response.json();
       setData(result?.predictions || "APIからの応答が不正です。");
+    } catch (err: any) {
+      console.error("Error fetching data:", err);
+      setError("エラーが発生しました。");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { data, loading, error, fetchData };
+};
+
+export const useFetchData = <T>(defaultState: T) => {
+  const [data, setData] = useState<T>(defaultState);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // ユーザーIDを取得
+      const userId = await getUserId();
+
+      // データを取得
+      const response = await fetch(`${API_HOST}/data?user_id=${userId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setData(result.qa_sessions || []);
     } catch (err: any) {
       console.error("Error fetching data:", err);
       setError("エラーが発生しました。");
