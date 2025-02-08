@@ -54,21 +54,6 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     }
   }, []);
 
-  // 会話履歴からプロンプト文字列を作成
-  const buildPrompt = (newQuestion: string) => {
-    const historyText = chatHistory
-      .map(
-        (msg) =>
-          `${msg.role === "user" ? "ユーザー" : "アシスタント"}: ${msg.content}`
-      )
-      .join("\n");
-    const pageInfoText = pageInfo ? `\n参考情報: ${pageInfo.content}` : "";
-    const prompt = historyText
-      ? `${historyText}\nユーザー: ${newQuestion}`
-      : `ユーザー: ${newQuestion}`;
-    return prompt + pageInfoText;
-  };
-
   const buildHistory = () => {
     const historyText = chatHistory
       .map(
