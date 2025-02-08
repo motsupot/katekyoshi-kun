@@ -42,8 +42,9 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   const handleMakeQuestion = () => {
     if (pageInfo) {
       fetchQuestion({
-        text: buildQuestionPrompt(pageInfo.content),
-        chat_type: "quiz",
+        url: pageInfo.url,
+        title: pageInfo.title,
+        page_info: pageInfo.content,
       });
     }
   };
