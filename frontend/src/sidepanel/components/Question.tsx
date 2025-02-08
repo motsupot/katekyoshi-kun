@@ -69,6 +69,16 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     return prompt + pageInfoText;
   };
 
+  const buildHistory = () => {
+    const historyText = chatHistory
+      .map(
+        (msg) =>
+          `${msg.role === "user" ? "ユーザー" : "アシスタント"}: ${msg.content}`
+      )
+      .join("\n");
+    return historyText;
+  };
+
   const handleQuestion = () => {
     if (pageInfo && currentQuestion.trim()) {
       // まず、ユーザーの発言を会話履歴に追加
@@ -76,14 +86,13 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
         ...prev,
         { role: "user", content: currentQuestion.trim() },
       ]);
-      // 作成したプロンプト文字列を送信する
-      const prompt = buildPrompt(currentQuestion.trim());
       fetchAnswer({
-        text: prompt,
+        chat_history: buildHistory(),
         question: currentQuestion.trim(),
         chat_id: chatId,
         url: pageInfo.url,
         title: pageInfo.title,
+        page_info: pageInfo.content,
       });
       // 入力欄をクリア
       setCurrentQuestion("");
