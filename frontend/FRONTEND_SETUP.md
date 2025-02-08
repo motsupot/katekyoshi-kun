@@ -9,8 +9,6 @@ frontend 配下の .env.sample を参考に .env を作成
 volta をインストールする（ https://docs.volta.sh/guide/getting-started ）。\
 その後、以下のコマンドを順に実行
 
-`volta install`
-
 `volta install pnpm`
 
 `pnpm install`
