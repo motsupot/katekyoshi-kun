@@ -11,6 +11,10 @@
 - `export GOOGLE_APPLICATION_CREDENTIALS="/backend/{katekyoshi-kun-7dff12803eef}.json"` みたいに backend 直下に配置して絶対パスで環境変数を設定する
 - `gcloud auth login`
 
+# 環境変数
+
+- .env.example を参考に環境変数を設定しておく
+
 ## 起動
 
 `uvicorn app.main:app --reload --port 8888`
