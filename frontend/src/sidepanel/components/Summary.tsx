@@ -27,18 +27,10 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
       console.error("ページの内容が取得できませんでした.");
       return;
     }
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs.length <= 0) {
-        console.error("アクティブなタブが取得できませんでした。");
-        return;
-      }
-      const currentUrl = tabs[0].url;
-      console.log("現在のURL:", currentUrl);
-      fetchSummary({
-        content: pageInfo.content,
-        url: currentUrl ?? "NO_URL",
-        title: pageInfo.title,
-      });
+    fetchSummary({
+      content: pageInfo.content,
+      url: pageInfo.url,
+      title: pageInfo.title,
     });
   };
 
