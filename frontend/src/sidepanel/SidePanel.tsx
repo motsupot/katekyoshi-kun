@@ -37,7 +37,7 @@ export const SidePanel: React.FC = () => {
       <div>
         <button onClick={resetStates}>リセット</button>
       </div>
-      <div style={{ maxWidth: 400, margin: "30px auto" }}>
+      <div style={{ margin: "30px auto" }}>
         <SortableList
           items={cards}
           onChange={setCards}
