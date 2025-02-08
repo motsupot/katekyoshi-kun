@@ -35,3 +35,11 @@ class Summary(BaseModel):
 class PredictRequest(BaseModel):
     text: str
     user_id: str
+
+class PredictQuestion(BaseModel):
+    text: str
+    user_id: str
+    question: str
+    chat_id: str
+    url: str
+    title: str
