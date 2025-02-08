@@ -3,6 +3,7 @@ import { Card, CardBase } from "./base";
 import { PageInfo } from "../../types/Page";
 import { useFetch } from "../../shared/hooks";
 import { API_HOST } from "../../constants";
+import { url } from "inspector";
 
 // メッセージの型定義
 type Message = {
@@ -20,6 +21,8 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
   // 会話の履歴（ユーザーとアシスタントの発言を管理）
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
 
+  const [chatId, setChatId] = useState<string | null>(null);
+
   const {
     data: responseData,
     loading: isQuestionLoading,
@@ -35,6 +38,22 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
       ]);
     }
   }, [responseData]);
+
+  useEffect(() => {
+    if (crypto.randomUUID) {
+      // ブラウザが対応している場合はcrypto.randomUUIDを使用
+      setChatId(crypto.randomUUID());
+    } else {
+      // 対応していない場合は簡易的なUUID生成ロジックを使用
+      setChatId(
+        "xxxxxxxx-xxxx-7xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          const r = (Math.random() * 16) | 0;
+          const v = c === "x" ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        })
+      );
+    }
+  }, []);
 
   // 会話履歴からプロンプト文字列を作成
   const buildPrompt = (newQuestion: string) => {
@@ -60,7 +79,13 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
       ]);
       // 作成したプロンプト文字列を送信する
       const prompt = buildPrompt(currentQuestion.trim());
-      fetchAnswer({ text: prompt, chat_type: "question" });
+      fetchAnswer({
+        text: prompt,
+        question: currentQuestion.trim(),
+        chat_id: chatId,
+        url: pageInfo.url,
+        title: pageInfo.title,
+      });
       // 入力欄をクリア
       setCurrentQuestion("");
     }
