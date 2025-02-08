@@ -22,7 +22,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     data: resQuestion,
     loading: isQuestionLoading,
     fetchData: fetchQuestion,
-  } = useFetch<string | null>(`${API_HOST}/predict`, null);
+  } = useFetch<string | null>(`${API_HOST}/predict/quiz`, null);
 
   useEffect(() => {
     if (resQuestion != null) setQuestionText(resQuestion);
@@ -33,7 +33,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     data: resFeedback,
     loading: isFeedbackLoading,
     fetchData: fetchFeedback,
-  } = useFetch<string | null>(`${API_HOST}/predict`, null);
+  } = useFetch<string | null>(`${API_HOST}/predict/scoring`, null);
 
   useEffect(() => {
     if (resFeedback != null) setFeedback(resFeedback);

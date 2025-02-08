@@ -16,7 +16,7 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
     data: summaryData,
     loading: isSummaryLoading,
     fetchData: fetchSummary,
-  } = useFetch<typeof summary>(`${API_HOST}/predict`, null);
+  } = useFetch<typeof summary>(`${API_HOST}/predict/summary`, null);
 
   useEffect(() => {
     if (summaryData !== null) setSummary(summaryData);
@@ -26,7 +26,6 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
     if (pageInfo) {
       fetchSummary({
         text: `以下の情報を要約して: ${pageInfo.content}`,
-        chat_type: "summary",
       });
     }
   };

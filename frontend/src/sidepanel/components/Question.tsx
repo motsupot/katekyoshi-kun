@@ -24,7 +24,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     data: responseData,
     loading: isQuestionLoading,
     fetchData: fetchAnswer,
-  } = useFetch<string | null>(`${API_HOST}/predict`, null);
+  } = useFetch<string | null>(`${API_HOST}/predict/question`, null);
 
   // APIからの回答が返ってきたら、会話履歴に追加
   useEffect(() => {
