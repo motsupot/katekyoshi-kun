@@ -19,16 +19,6 @@ const ImageCard: React.FC<{ imageUrl: string; caption: string }> = ({
   );
 };
 
-const QuizCard: React.FC<{ quizText: string }> = ({ quizText }) => {
-  return (
-    <Card title="クイズ">
-      <p style={{ color: "#555", fontSize: "14px", lineHeight: "1.6" }}>
-        {quizText}
-      </p>
-    </Card>
-  );
-};
-
 const ChatCard: React.FC<{ links: string[] }> = ({ links }) => {
   return (
     <Card title="関連ページ情報">

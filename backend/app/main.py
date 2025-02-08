@@ -27,7 +27,7 @@ app.add_middleware(
 
 # GCPプロジェクトとリージョンの設定
 PROJECT_ID = "katekyoshi-kun"
-LOCATION = "us-central1" 
+LOCATION = "us-central1"
 
 # Vertex AIの初期化
 aiplatform.init(project=PROJECT_ID, location=LOCATION)
@@ -39,7 +39,7 @@ db = firestore.Client()
 class PredictRequest(BaseModel):
     text: str
     user_id: str
-    chat_type: Optional[Literal["summary", "question", "quiz"]] = "none"
+    chat_type: Optional[Literal["summary", "question", "quiz", "scoring", "none"]] = "none"
 
 @app.get("/")
 def read_root():

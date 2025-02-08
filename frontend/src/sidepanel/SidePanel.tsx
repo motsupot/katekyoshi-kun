@@ -13,6 +13,7 @@ export const SidePanel: React.FC = () => {
       setCards([
         { id: "1", type: "Summary", pageInfo },
         { id: "2", type: "Question", pageInfo },
+        { id: "3", type: "Quiz", pageInfo },
       ]);
     }, 0); // 次のレンダリングタイミングで状態を更新
   };
@@ -22,6 +23,7 @@ export const SidePanel: React.FC = () => {
   const [cards, setCards] = React.useState<CardProps[]>([
     { id: "1", type: "Summary", pageInfo },
     { id: "2", type: "Question", pageInfo },
+    { id: "3", type: "Quiz", pageInfo },
   ]);
 
   useEffect(() => {
