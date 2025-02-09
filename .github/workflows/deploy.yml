@@ -2,8 +2,8 @@ name: Deploy to Cloud Run
 
 on:
   push:
-    branches:
-      - main # トリガーとなるブランチ名
+    # branches:
+    #   - main # トリガーとなるブランチ名
 
 jobs:
   build-and-deploy:
@@ -32,16 +32,16 @@ jobs:
       - name: Docker イメージをビルド
         working-directory: ./backend
         run: |
-          docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha(0,8) }} .
+          docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha }} .
 
       - name: Docker イメージを Artifact Registry にプッシュ
         run: |
-          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha(0,8) }}
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha }}
 
       - name: Cloud Run にデプロイ
         run: |
           gcloud run deploy fastapi-app \
-            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha(0,8) }} \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha }} \
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated
