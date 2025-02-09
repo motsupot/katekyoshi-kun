@@ -4,6 +4,7 @@ import { PageInfo } from "../../types/Page";
 import { useBookmark, useFetch } from "../../shared/hooks";
 import { API_HOST } from "../../constants";
 import Markdown from "react-markdown";
+import { Bookmark } from "./Bookmark";
 
 type Props = {
   pageInfo: PageInfo | null;
@@ -55,7 +56,18 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   };
 
   return (
-    <Card title="要約">
+    <Card
+      title="要約"
+      rightElement={
+        summary && (
+          <Bookmark
+            isBookmarked={isBookmarked}
+            isRegistering={isRegistering}
+            onClick={onBookmark}
+          />
+        )
+      }
+    >
       {summary || isSummaryLoading ? (
         <div
           style={{
@@ -77,38 +89,7 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
       <button onClick={onClickSummary}>
         {summary ? "再要約する" : "要約する"}
       </button>
-      {summary && (
-        <Bookmark
-          isBookmarked={isBookmarked}
-          isRegistering={isRegistering}
-          onClick={onBookmark}
-        />
-      )}
     </Card>
-  );
-};
-
-const Bookmark = ({
-  isBookmarked,
-  isRegistering,
-  onClick,
-}: Omit<ReturnType<typeof useBookmark>, "bookmarkId" | "registerBookmark"> & {
-  onClick: () => void;
-}) => {
-  if (isRegistering) {
-    return (
-      <>
-        <div>お待ちください...</div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <button onClick={onClick}>
-        ブックマークに追加{isBookmarked ? "済" : "する"}
-      </button>
-    </>
   );
 };
 
