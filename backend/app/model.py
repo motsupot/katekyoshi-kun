@@ -178,8 +178,8 @@ class PredictScoring(BaseModel):
     answer: str
 
     def save(self, score: int, explanation: str):
-        # コレクション「quizzies」に新しいドキュメントを作成
-        doc_ref = db.collection('quizzies').document()
+        # コレクション「quizzes」に新しいドキュメントを作成
+        doc_ref = db.collection('quizzes').document()
         # ドキュメントにデータを保存
         doc_ref.set({
             'user_id': self.user_id,
@@ -283,7 +283,7 @@ class PredictQuestion(BaseModel):
 class AnalyzeProfileRequest(BaseModel):
     user_id: str
 
-class Quizz(BaseModel):
+class Quiz(BaseModel):
     user_id: str
     url: str
     title: str
@@ -292,6 +292,13 @@ class Quizz(BaseModel):
     score: int
     explanation: str
 
+
+    def find(id: str):
+        doc_ref = db.collection('quizzes').document(id)
+        doc = doc_ref.get()
+        return Summary.model_validate(doc.to_dict()) if doc.exists else None
+
+
     def find_by_user_id(user_id: str):
-        docs = db.collection('quizzies').where('user_id', '==', user_id).stream()
-        return list(map(lambda doc: Quizz.model_validate(doc.to_dict()), docs))
+        docs = db.collection('quizzes').where('user_id', '==', user_id).stream()
+        return list(map(lambda doc: Quiz.model_validate(doc.to_dict()), docs))
