@@ -139,7 +139,7 @@ class Bookmark(BaseModel):
 
     def find_by(user_id: str):
         docs = db.collection('bookmarks').where('user_id', '==', user_id).stream()
-        return list(map(lambda doc: Summary.model_validate(doc.to_dict()), docs))
+        return list(map(lambda doc: Bookmark.model_validate(doc.to_dict()), docs))
 
 
 class BookmarkRegisterRequest(BaseModel):

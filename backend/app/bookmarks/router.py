@@ -10,11 +10,19 @@ router = APIRouter()
 async def get_all_bookmarks():
     return dict(bookmarks=[])
 
-
-@router.get("/{user_id}")
+@router.get("/summary/{user_id}")
 async def get_bookmark_by_user_id(user_id: str):
-    return dict(summaries=Summary.find_by_user_id(user_id))
-
+    bookmarks = Bookmark.find_by(user_id)
+    
+    item_ids = [bookmark.item_id for bookmark in bookmarks]
+    
+    summaries = []
+    for item_id in item_ids:
+        summary = Summary.find(item_id)
+        if summary:
+            summaries.append(summary)
+    
+    return dict(summaries=summaries)
 
 @router.post("/summary")
 async def bookmark_summary(entry: BookmarkRegisterRequest):
