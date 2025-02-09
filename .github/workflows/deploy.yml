@@ -32,16 +32,16 @@ jobs:
       - name: Docker イメージをビルド
         working-directory: ./backend
         run: |
-          docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:latest .
+          docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha(0,8) }} .
 
       - name: Docker イメージを Artifact Registry にプッシュ
         run: |
-          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:latest
+          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha(0,8) }}
 
       - name: Cloud Run にデプロイ
         run: |
           gcloud run deploy fastapi-app \
-            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:latest \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:${{ github.sha(0,8) }} \
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated
