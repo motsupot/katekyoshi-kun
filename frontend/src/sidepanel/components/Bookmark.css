@@ -1,0 +1,41 @@
+.bookmark-button {
+  outline: none;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.bookmark-icon {
+  width: 24px;
+  height: 24px;
+  transition: fill 0.3s ease-in-out;
+  stroke: #444; /* 常に枠線を維持 */
+  stroke-width: 1px;
+}
+
+.default {
+  fill: white;
+}
+
+.loading {
+  fill: #444;
+  animation: pulse-fill 2s infinite; /* opacity ではなく fill のみを変更 */
+}
+
+.bookmarked {
+  fill: #444;
+}
+
+/* stroke ではなく fill のみをアニメーション */
+@keyframes pulse-fill {
+  0% {
+    fill: rgba(68, 68, 68, 0.2); /* fill のみ薄くする */
+  }
+  50% {
+    fill: rgba(68, 68, 68, 0.8);
+  }
+  100% {
+    fill: rgba(68, 68, 68, 0.2);
+  }
+}

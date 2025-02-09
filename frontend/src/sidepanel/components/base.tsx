@@ -7,10 +7,11 @@ export type CardBase = BaseItem & {
   type: CardType;
 };
 
-export const Card: React.FC<{ title: string; children: React.ReactNode }> = ({
-  title,
-  children,
-}) => {
+export const Card: React.FC<{
+  title: string;
+  children: React.ReactNode;
+  rightElement?: React.ReactNode;
+}> = ({ title, children, rightElement }) => {
   return (
     <div
       style={{
@@ -19,15 +20,25 @@ export const Card: React.FC<{ title: string; children: React.ReactNode }> = ({
         width: "100%",
       }}
     >
-      <h3
+      <div
         style={{
-          fontSize: "18px",
-          margin: "0 0 12px",
-          color: "#333",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "bottom",
+          marginBottom: "12px",
         }}
       >
-        {title}
-      </h3>
+        <h3
+          style={{
+            fontSize: "18px",
+            margin: 0,
+            color: "#333",
+          }}
+        >
+          {title}
+        </h3>
+        {rightElement && <div>{rightElement}</div>}
+      </div>
       <div>{children}</div>
     </div>
   );
