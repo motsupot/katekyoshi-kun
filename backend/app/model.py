@@ -8,7 +8,6 @@ class Summary(BaseModel):
     user_id: str
     body: str
     title: str
-    timestamp: datetime
 
     def save(self):
         # コレクション「qa_sessions」に新しいドキュメントを作成
@@ -39,7 +38,6 @@ class Conversation(BaseModel):
     user_id: str
     chat_id: str
     title: str
-    timestamp: datetime
 
     def save(self):
         doc_ref = db.collection('conversations').document(self.chat_id)
@@ -68,7 +66,6 @@ class Message(BaseModel):
     chat_id: str
     input: str
     output: str
-    timestamp: datetime
 
     def save(self):
         doc_ref = db.collection('messages').document()
@@ -251,7 +248,6 @@ class Quizz(BaseModel):
     answer: str
     score: int
     explanation: str
-    timestamp: datetime
 
     def find_by_user_id(user_id: str):
         docs = db.collection('quizzies').where('user_id', '==', user_id).stream()
