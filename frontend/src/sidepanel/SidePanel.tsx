@@ -31,11 +31,25 @@ export const SidePanel: React.FC = () => {
     setCards(cards.map((card) => ({ ...card, pageInfo })));
   }, [pageInfo]);
 
+  const handleOpenAnalysis = () => {
+    const url = "dist/page/index.html";
+    // chrome.tabs.create は Chrome Extension 環境向け
+    if (chrome && chrome.tabs && chrome.tabs.create) {
+      chrome.tabs
+        .create({ url })
+        .catch((err) => console.log("タブ作成エラー:", err));
+    } else {
+      // 拡張機能でない場合は window.open にフォールバック
+      window.open(url, "_blank");
+    }
+  };
+
   return (
     <>
       <SidePanelHeader />
       <div>
         <button onClick={resetStates}>リセット</button>
+        <button onClick={handleOpenAnalysis}>分析結果を開く</button>
       </div>
       <div style={{ margin: "30px auto" }}>
         <SortableList

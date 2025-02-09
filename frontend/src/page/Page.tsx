@@ -1,45 +1,41 @@
 import React, { useEffect } from "react";
-import { useFetchData } from "../shared/hooks";
+import { useFetch } from "../shared/hooks";
+import { API_HOST } from "../constants";
+import Markdown from "react-markdown";
 
 export const Page: React.FC = () => {
-  const { data, loading, error, fetchData } = useFetchData<any[]>([]);
+  // useFetch の初期値は空文字列（分析結果がテキストで返る想定）
+  const { data, loading, error, fetchData } = useFetch(
+    API_HOST + "/analyze_profile",
+    ""
+  );
 
   useEffect(() => {
-    fetchData();
+    (async () => {
+      await fetchData({});
+    })();
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        width: "100vw",
+        margin: 0,
+        padding: "0 1rem",
+        boxSizing: "border-box",
+      }}
+    >
       <h1>AI家庭教師くん</h1>
-      <h2>データ一覧</h2>
-
-      {loading && <p>データを取得中...</p>}
-      {error && <p>エラー: {error}</p>}
-
-      {!loading && !error && data.length > 0 ? (
-        <ul>
-          {data.map((item, index) => (
-            <li
-              key={index}
-              style={{ marginBottom: "1rem", borderBottom: "1px solid #ccc" }}
-            >
-              <p>
-                <strong>質問:</strong> {item.question}
-              </p>
-              <p>
-                <strong>回答:</strong> {item.answer}
-              </p>
-              <p>
-                <strong>タイプ:</strong> {item.type}
-              </p>
-              <p>
-                <strong>ユーザー:</strong> {item.user}
-              </p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>データがありません。</p>
+      <h2>あなたの人物像</h2>
+      {loading && <p>読み込み中...</p>}
+      {error && <p>{error}</p>}
+      {data && (
+        <div style={{ width: "70%" }}>
+          <h3>分析結果</h3>
+          <div style={{ width: "100%" }}>
+            <Markdown>{data}</Markdown>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -21,11 +21,10 @@
   },
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_popup": "./dist/popup/popup.html",
     "default_icon": "kateikyoushi_woman_boy.png"
   },
   "side_panel": {
-   "default_path": "./dist/sidepanel/sidepanel.html"
+    "default_path": "./dist/sidepanel/sidepanel.html"
   },
   "icons": {
     "128": "kateikyoushi_woman_boy.png"

@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 from app.db import db
 from google.cloud import firestore
-
+from datetime import datetime
 
 class Summary(BaseModel):
     url: str
@@ -270,6 +270,7 @@ class PredictScoring(BaseModel):
 {self.answer}
 
 """
+
 class PredictQuestion(BaseModel):
     chat_history: str
     user_id: str
@@ -278,3 +279,19 @@ class PredictQuestion(BaseModel):
     url: str
     title: str
     page_info: str
+
+class AnalyzeProfileRequest(BaseModel):
+    user_id: str
+
+class Quizz(BaseModel):
+    user_id: str
+    url: str
+    title: str
+    question: str
+    answer: str
+    score: int
+    explanation: str
+
+    def find_by_user_id(user_id: str):
+        docs = db.collection('quizzies').where('user_id', '==', user_id).stream()
+        return list(map(lambda doc: Quizz.model_validate(doc.to_dict()), docs))

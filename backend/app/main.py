@@ -1,6 +1,7 @@
 from app.bookmarks import router as bookmark_router
 from app.db import db, save_question_and_answer
 from app.predict import router as predict_router
+from app.model import AnalyzeProfileRequest, Summary, Conversation, Message, Quizz
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from google.cloud import aiplatform
@@ -64,13 +65,41 @@ async def predict(request: PredictRequest):
     return {"predictions": predictions}
 
 
-@app.get("/data")
-async def get_user_data(user_id: str):
-    # FirestoreのコレクションからユーザーIDに基づいてデータを取得
-    docs = db.collection('qa_sessions').where('user', '==', user_id).stream()
-    print(docs)
-    user_data = []
-    for doc in docs:
-        user_data.append(doc.to_dict())
+@app.post("/analyze_profile")
+async def analyze_profile(request: AnalyzeProfileRequest):
+    # 各テーブルからユーザーごとのデータを取得する
+    summaries_list = Summary.find_by_user_id(request.user_id)
+    print("summaries_list:", summaries_list)
+    conversations_list = Conversation.find_by_user_id(request.user_id)
+    print("conversations_list:", conversations_list)
+    messages_list = Message.find_by_user_id(request.user_id)
+    print("messages_list:", messages_list)
+    quizzies_list = Quizz.find_by_user_id(request.user_id)
+    print("quizzies_list:", quizzies_list)
 
-    return {"qa_sessions": user_data}
+    # 取得した各データを文字列に変換（例：必要なフィールドのみ抽出）
+    summaries_data = "\n".join([s.body for s in summaries_list])
+    conversations_data = "\n".join([f"タイトル: {c.title} （チャットID: {c.chat_id}）" for c in conversations_list])
+    messages_data = "\n".join([f"チャットID: {m.chat_id} 質問: {m.input} -> 回答: {m.output}" for m in messages_list])
+    quizzies_data = "\n".join([f"問題: {q.question}\n回答: {q.answer}\n得点: {q.score}" for q in quizzies_list])
+    
+    # プロンプトを組み立てる
+    prompt = (
+        "あなたは心理分析の専門家です。以下の情報をもとに、このユーザーの全体像、強み、弱み、"
+        "そして今後の成長のための具体的なアドバイスをMarkdown形式で出力してください。\n\n"
+        "【要約内容】\n" + summaries_data + "\n\n"
+        "【チャット履歴】\n" + conversations_data + "\n\n"
+        "【メッセージ履歴】\n" + messages_data + "\n\n"
+        "【クイズ結果】\n" + quizzies_data + "\n\n"
+        "以上の情報を総合して、分析結果を出力してください。ただし、チャットIDなどの情報は含めないようにしてください。"
+    )
+    
+    print("生成プロンプト:\n", prompt)
+    
+    # generative モデルを呼び出して分析結果を取得する
+    model = GenerativeModel("gemini-1.5-flash-002")
+    response = model.generate_content(prompt)
+    predictions = response.text
+    print("レスポンス:\n", predictions)
+
+    return {"predictions": predictions}
