@@ -1,4 +1,4 @@
-def create_analysis_prompt(summaries_data: str, conversations_data: str, messages_data: str, quizzes_data: str) -> str:
+def create_analysis_prompt(summaries_data: str, conversations_data: str, messages_data: str, quizzes_data: str, bookmarked_summaries_data: str, bookmarked_quizzes_data: str) -> str:
     """
     分析プロンプトを生成する。
     """
@@ -27,6 +27,8 @@ def create_analysis_prompt(summaries_data: str, conversations_data: str, message
 *   【チャット履歴】\n {conversations_data} \n\n
 *   【メッセージ履歴】\n {messages_data} \n\n
 *   【クイズ結果】\n {quizzes_data} \n\n
+*   【ユーザーがブックマークしている要約】\n {bookmarked_summaries_data} \n\n
+*   【ユーザーがブックマークしているクイズ結果】\n {bookmarked_quizzes_data} \n\n
 
 **出力形式:**
 
