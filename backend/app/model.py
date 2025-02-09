@@ -325,3 +325,7 @@ class Quiz(BaseModel):
     def find_by_user_id(user_id: str):
         docs = db.collection('quizzes').where('user_id', '==', user_id).stream()
         return list(map(lambda doc: Quiz.model_validate(doc.to_dict()), docs))
+
+
+class QuizWithBookmarkId(Quiz):
+    bookmark_id: str
