@@ -46,6 +46,19 @@ async def bookmark_summary(entry: BookmarkRegisterRequest):
 async def bookmark_summary():
     return "AHI"
 
+@router.get("/quiz/{user_id}")
+async def get_bookmark_by_user_id(user_id: str):
+    bookmarks = Bookmark.find_by(user_id)
+
+    item_ids = [bookmark.item_id for bookmark in bookmarks if bookmark.type == ChatType.QUIZ]
+
+    quizzes = []
+    for item_id in item_ids:
+        quiz = Quiz.find(item_id)
+        if quiz:
+            quizzes.append(quiz)
+
+    return dict(quizzes=quizzes)
 
 @router.post("/quiz")
 async def bookmark_summary(entry: BookmarkRegisterRequest):

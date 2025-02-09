@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { useFetch } from "../shared/hooks";
 import { API_HOST } from "../constants";
 import Markdown from "react-markdown";
-import { Bookmarks } from "./Bookmarks";
+import { BookmarkSummaries } from "./BookmarkSummaries";
+import { BookmarkQuizzes } from "./BookmarkQuizzes";
 
 export const Page: React.FC = () => {
   // useFetch の初期値は空文字列（分析結果がテキストで返る想定）
@@ -39,7 +40,8 @@ export const Page: React.FC = () => {
         </div>
       )}
       <h2>ブックマーク一覧</h2>
-      <Bookmarks />
+      <BookmarkSummaries />
+      <BookmarkQuizzes />
     </div>
   );
 };

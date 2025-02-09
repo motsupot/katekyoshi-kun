@@ -4,28 +4,31 @@ import Markdown from "react-markdown";
 import { getUserId } from "../shared/functions/getUserId";
 import { Card } from "../sidepanel/components/base";
 
-export const Bookmarks: React.FC = () => {
-  interface Summary {
+export const BookmarkQuizzes: React.FC = () => {
+  interface Quiz {
     id: string;
     title: string;
-    body: string;
     url: string;
+    question: string;
+    answer: string;
+    score: number;
+    explanation: string;
   }
 
-  const [summaries, setSummaries] = useState<Summary[]>([]);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSummaries = async () => {
+    const fetchQuizzes = async () => {
       try {
         const userId = await getUserId();
-        const response = await fetch(`${API_HOST}/bookmarks/summary/${userId}`);
+        const response = await fetch(`${API_HOST}/bookmarks/quiz/${userId}`);
         if (!response.ok) {
           throw new Error("サマリーの取得に失敗しました");
         }
         const data = await response.json();
-        setSummaries(data.summaries);
+        setQuizzes(data.quizzes);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -33,7 +36,7 @@ export const Bookmarks: React.FC = () => {
       }
     };
 
-    fetchSummaries();
+    fetchQuizzes();
   }, []);
 
   if (loading) {
@@ -46,9 +49,9 @@ export const Bookmarks: React.FC = () => {
 
   return (
     <div>
-      <h2>ブックマークしたサマリー一覧</h2>
-      {summaries.length === 0 ? (
-        <p>ブックマークされたサマリーはありません。</p>
+      <h2>ブックマークしたクイズ一覧</h2>
+      {quizzes.length === 0 ? (
+        <p>ブックマークされたクイズはありません。</p>
       ) : (
         <div
           style={{
@@ -57,16 +60,16 @@ export const Bookmarks: React.FC = () => {
             gap: "10px",
           }}
         >
-          {summaries.map((summary) => (
+          {quizzes.map((quiz) => (
             <div
-              key={summary.id}
+              key={quiz.id}
               style={{
                 width: "calc(33.333% - 10px)",
                 boxSizing: "border-box",
               }}
             >
-              <Card title={summary.title}>
-                <a href={summary.url} target="_blank" rel="noreferrer">
+              <Card title={quiz.title}>
+                <a href={quiz.url} target="_blank" rel="noreferrer">
                   ページに移動する
                 </a>
                 <div
@@ -83,7 +86,10 @@ export const Bookmarks: React.FC = () => {
                     marginBottom: "10px",
                   }}
                 >
-                  <Markdown>{summary.body}</Markdown>
+                  <Markdown>{quiz.question}</Markdown>
+                  <h3>ユーザの回答</h3>
+                  <Markdown>{quiz.answer}</Markdown>
+                  <Markdown>{quiz.explanation}</Markdown>
                 </div>
               </Card>
             </div>
