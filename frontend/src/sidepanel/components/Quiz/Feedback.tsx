@@ -16,7 +16,7 @@ export const Feedback = ({
   }
   return (
     <div>
-      採点結果：<Markdown>{feedback}</Markdown>
+      <Markdown>{feedback}</Markdown>
     </div>
   );
 };
