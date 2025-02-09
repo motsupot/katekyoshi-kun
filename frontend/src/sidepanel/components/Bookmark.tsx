@@ -12,7 +12,7 @@ export const Bookmark = ({
 }) => {
   const status = toStatus(isBookmarked, isRegistering);
   return (
-    <button onClick={onClick} disabled={status === "loading"}>
+    <button className="bookmark-button" onClick={onClick} disabled={status === "loading"}>
       <BookmarkIcon className={`bookmark-icon ${status}`} />
     </button>
   );
