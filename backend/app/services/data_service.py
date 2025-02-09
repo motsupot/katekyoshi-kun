@@ -1,4 +1,4 @@
-from app.model import Summary, Conversation, Message, Quizz
+from app.model import Summary, Conversation, Message, Quiz
 
 async def get_user_data_as_strings(user_id: str) -> tuple[str, str, str, str]:
     """
@@ -7,7 +7,7 @@ async def get_user_data_as_strings(user_id: str) -> tuple[str, str, str, str]:
     summaries_list = Summary.find_by_user_id(user_id)
     conversations_list = Conversation.find_by_user_id(user_id)
     messages_list = Message.find_by_user_id(user_id)
-    quizzes_list = Quizz.find_by_user_id(user_id)
+    quizzes_list = Quiz.find_by_user_id(user_id)
 
     summaries_data = "\n".join([s.body for s in summaries_list])
     conversations_data = "\n".join([f"タイトル: {c.title}\n（チャットID: {c.chat_id}  タイムスタンプ： {c.timestamp} ）" for c in conversations_list])
