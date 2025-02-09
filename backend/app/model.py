@@ -1,3 +1,5 @@
+from enum import Enum
+from typing import Optional
 from pydantic import BaseModel
 from app.db import db
 from google.cloud import firestore
@@ -98,6 +100,47 @@ class PredictSummaryRequest(BaseModel):
     content: str
     url: str
     title: str
+
+
+class ChatType(str, Enum):
+    SUMMARY = "summary"
+    QUESTION = "question"
+    QUIZ = "quiz"
+    SCORING = "scoring"
+
+
+class Bookmark(BaseModel):
+    user_id: str
+    type: ChatType
+    item_id: str
+
+    def save(self):
+        # コレクション「qa_sessions」に新しいドキュメントを作成
+        doc_ref = db.collection('bookmarks').document()
+        # ドキュメントにデータを保存
+        doc_ref.set({
+            'user_id': self.user_id,
+            'type': self.type.value,
+            'item_id': self.item_id,
+            'timestamp': firestore.SERVER_TIMESTAMP
+        })
+        return doc_ref.id
+
+
+    def find(id: str):
+        doc_ref = db.collection('bookmarks').document(id)
+        doc = doc_ref.get()
+        return Summary.model_validate(doc.to_dict()) if doc.exists else None
+
+
+    def find_by(user_id: str):
+        docs = db.collection('bookmarks').where('user_id', '==', user_id).stream()
+        return list(map(lambda doc: Summary.model_validate(doc.to_dict()), docs))
+
+
+class BookmarkRegisterRequest(BaseModel):
+    id: str
+    user_id: str
 
 
 class PredictQuiz(BaseModel):
