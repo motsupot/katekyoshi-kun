@@ -14,7 +14,7 @@ async def get_all_bookmarks():
 async def get_bookmark_by_user_id(user_id: str):
     bookmarks = Bookmark.find_by(user_id)
     
-    item_ids = [bookmark.item_id for bookmark in bookmarks]
+    item_ids = [bookmark.item_id for bookmark in bookmarks if bookmark.type == ChatType.SUMMARY]
     
     summaries = []
     for item_id in item_ids:
