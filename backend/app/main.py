@@ -79,9 +79,9 @@ async def analyze_profile(request: AnalyzeProfileRequest):
 
     # 取得した各データを文字列に変換（例：必要なフィールドのみ抽出）
     summaries_data = "\n".join([s.body for s in summaries_list])
-    conversations_data = "\n".join([f"タイトル: {c.title} （チャットID: {c.chat_id}）" for c in conversations_list])
-    messages_data = "\n".join([f"チャットID: {m.chat_id} 質問: {m.input} -> 回答: {m.output}" for m in messages_list])
-    quizzes_data = "\n".join([f"問題: {q.question}\n回答: {q.answer}\n得点: {q.score}" for q in quizzes_list])
+    conversations_data = "\n".join([f"タイトル: {c.title}\n（チャットID: {c.chat_id}  タイムスタンプ： {c.timestamp} ）" for c in conversations_list])
+    messages_data = "\n".join([f"チャットID: {m.chat_id}\nタイムスタンプ: {m.timestamp}\n質問: {m.input} -> 回答: {m.output}" for m in messages_list])
+    quizzes_data = "\n".join([f"問題: {q.question}\n回答: {q.answer}\n得点: {q.score} \nタイムスタンプ: {q.timestamp} " for q in quizzes_list])
 
     # プロンプトを組み立てる
     prompt = (

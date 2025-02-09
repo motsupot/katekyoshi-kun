@@ -4,12 +4,14 @@ from pydantic import BaseModel
 from app.db import db
 from google.cloud import firestore
 from datetime import datetime
+from typing import Optional
 
 class Summary(BaseModel):
     url: str
     user_id: str
     body: str
     title: str
+    timestamp: Optional[datetime] = None
 
     def save(self):
         # コレクション「qa_sessions」に新しいドキュメントを作成
@@ -40,6 +42,7 @@ class Conversation(BaseModel):
     user_id: str
     chat_id: str
     title: str
+    timestamp: Optional[datetime] = None
 
     def save(self):
         doc_ref = db.collection('conversations').document(self.chat_id)
@@ -68,6 +71,7 @@ class Message(BaseModel):
     chat_id: str
     input: str
     output: str
+    timestamp: Optional[datetime] = None
 
     def save(self):
         doc_ref = db.collection('messages').document()
@@ -135,7 +139,7 @@ class Bookmark(BaseModel):
 
     def find_by(user_id: str):
         docs = db.collection('bookmarks').where('user_id', '==', user_id).stream()
-        return list(map(lambda doc: Summary.model_validate(doc.to_dict()), docs))
+        return list(map(lambda doc: Bookmark.model_validate(doc.to_dict()), docs))
 
 
 class BookmarkRegisterRequest(BaseModel):
@@ -291,6 +295,7 @@ class Quiz(BaseModel):
     answer: str
     score: int
     explanation: str
+    timestamp: Optional[datetime] = None
 
 
     def find(id: str):

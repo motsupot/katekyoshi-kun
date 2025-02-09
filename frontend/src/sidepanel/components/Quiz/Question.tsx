@@ -18,7 +18,6 @@ export const Question = ({
   }
   return (
     <div>
-      問題：
       <Markdown>{questionText}</Markdown>
     </div>
   );
