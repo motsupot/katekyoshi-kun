@@ -2,8 +2,8 @@ name: Deploy to Cloud Run
 
 on:
   push:
-    # branches:
-    #   - main # トリガーとなるブランチ名
+    branches:
+      - main # トリガーとなるブランチ名
 
 jobs:
   build-and-deploy:
