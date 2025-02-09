@@ -1,13 +1,9 @@
 name: Deploy to Cloud Run
 
-# on:
-#   push:
-#     branches:
-#       - main # トリガーとなるブランチ名
 on:
   push:
     branches:
-      - feature/auto-deploy
+      - main # トリガーとなるブランチ名
 
 jobs:
   build-and-deploy:
