@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBase } from "./base";
 import { PageInfo } from "../../types/Page";
-import { useFetch } from "../../shared/hooks";
+import { useBookmark, useFetch } from "../../shared/hooks";
 import { API_HOST } from "../../constants";
 import Markdown from "react-markdown";
 
@@ -12,13 +12,15 @@ type Props = {
 export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   const [summary, setSummary] = useState<string | null>(null);
   const [summaryId, setSummaryId] = useState<string | null>(null);
-  const [isBookmarked, setIsBookmarked] = useState()
 
   const {
     data: summaryData,
     loading: isSummaryLoading,
     fetchData: fetchSummary,
-  } = useFetch<{ result: string; id: string } | null>(`${API_HOST}/predict/summary`, null);
+  } = useFetch<{ result: string; id: string } | null>(
+    `${API_HOST}/predict/summary`,
+    null
+  );
 
   useEffect(() => {
     if (summaryData !== null) {
@@ -40,12 +42,17 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
     });
   };
 
+  // ブックマーク追加
+  const { isBookmarked, isRegistering, registerBookmark } =
+    useBookmark("summary");
+
   const onBookmark = () => {
     if (summaryId == null) {
       console.error("要約IDが存在しません.");
       return;
     }
-  }
+    registerBookmark(summaryId);
+  };
 
   return (
     <Card title="要約">
@@ -77,8 +84,38 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
         })()}
       </div>
       <button onClick={onClickSummary}>{summary ? "再" : ""}要約する</button>
-      {summary && <button onClick={onBookmark}>ブックマークに追加</button>}
+      {summary && (
+        <Bookmark
+          isBookmarked={isBookmarked}
+          isRegistering={isRegistering}
+          onClick={onBookmark}
+        />
+      )}
     </Card>
+  );
+};
+
+const Bookmark = ({
+  isBookmarked,
+  isRegistering,
+  onClick,
+}: Omit<ReturnType<typeof useBookmark>, "bookmarkId" | "registerBookmark"> & {
+  onClick: () => void;
+}) => {
+  if (isRegistering) {
+    return (
+      <>
+        <div>お待ちください...</div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <button onClick={onClick}>
+        ブックマークに追加{isBookmarked ? "済" : "する"}
+      </button>
+    </>
   );
 };
 
