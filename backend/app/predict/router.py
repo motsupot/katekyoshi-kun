@@ -12,7 +12,7 @@ async def get_all_bookmarks():
 
 @router.post("/summary")
 async def predict_summary(request: PredictSummaryRequest):
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-lite-preview-02-05")
     prompt = f"以下の情報を要約して:{request.content}"
 
     response = model.generate_content(prompt)
@@ -28,7 +28,7 @@ async def predict_summary(request: PredictSummaryRequest):
 
 @router.post("/question")
 async def predict_question(request: PredictQuestion):
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-lite-preview-02-05")
 
     # プロンプトテンプレートを定義して読みやすくする
     prompt = (
@@ -56,7 +56,7 @@ async def predict_question(request: PredictQuestion):
 
 @router.post("/quiz")
 async def predict_quiz(request: PredictQuiz):
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-lite-preview-02-05")
     prompt = request.build_prompt()
 
     response = model.generate_content(prompt)
@@ -70,7 +70,7 @@ async def predict_quiz(request: PredictQuiz):
 
 @router.post("/scoring")
 async def predict_quiz(request: PredictScoring):
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-lite-preview-02-05")
     prompt = request.build_prompt()
 
     response = model.generate_content(prompt)
