@@ -37,7 +37,7 @@ async def predict_question(request: PredictQuestion):
         "上記の会話内容を踏まえて、アシスタントとして以下の質問に回答せよ。\n"
         f"質問：{request.question}"
     )
-    
+
     print("生成プロンプト:\n", prompt)
 
     response = model.generate_content(prompt)
@@ -83,6 +83,6 @@ async def predict_quiz(request: PredictScoring):
     score = int(re.search(r"## 得点:\s*(\d+)/100", predictions).group(1))
 
     # DBに保存（）
-    request.save(score=score, explanation=predictions)
+    quiz_id = request.save(score=score, explanation=predictions)
 
-    return {"predictions": predictions}
+    return dict(predictions=dict(feedback=predictions, id=quiz_id))
