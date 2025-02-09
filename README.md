@@ -38,8 +38,8 @@
 
 ## フロントエンド
 
-frontend/FRONTEND_SETUP.md を参照
+[frontend/FRONTEND_SETUP.md](https://github.com/motsupot/katekyoshi-kun/blob/main/frontend/FRONTEND_SETUP.md) を参照
 
 ## バックエンド
 
-backend/BACKEND_SETUP.md を参照
+[backend/BACKEND_SETUP.md](https://github.com/motsupot/katekyoshi-kun/blob/main/backend/BACKEND_SETUP.md) を参照
