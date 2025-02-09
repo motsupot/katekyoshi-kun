@@ -112,15 +112,16 @@ class ChatType(str, Enum):
 class Bookmark(BaseModel):
     user_id: str
     type: ChatType
+    item_id: str
 
     def save(self):
         # コレクション「qa_sessions」に新しいドキュメントを作成
         doc_ref = db.collection('bookmarks').document()
         # ドキュメントにデータを保存
         doc_ref.set({
-            'url': self.url,
             'user_id': self.user_id,
-            'body': self.body,
+            'type': self.type.value,
+            'item_id': self.item_id,
             'timestamp': firestore.SERVER_TIMESTAMP
         })
         return doc_ref.id
@@ -135,6 +136,11 @@ class Bookmark(BaseModel):
     def find_by(user_id: str):
         docs = db.collection('bookmarks').where('user_id', '==', user_id).stream()
         return list(map(lambda doc: Summary.model_validate(doc.to_dict()), docs))
+
+
+class BookmarkRegisterRequest(BaseModel):
+    id: str
+    user_id: str
 
 
 class PredictQuiz(BaseModel):
