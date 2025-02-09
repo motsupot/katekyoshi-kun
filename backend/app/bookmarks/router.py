@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from grpc import Status
-from app.model import Bookmark, BookmarkRegisterRequest, ChatType, Quiz, Summary
+from app.model import Bookmark, BookmarkRegisterRequest, ChatType, Quiz, QuizWithBookmarkId, Summary, SummaryWithBookmarkId
 
 
 router = APIRouter()
@@ -14,13 +14,19 @@ async def get_all_bookmarks():
 async def get_bookmark_by_user_id(user_id: str):
     bookmarks = Bookmark.find_by(user_id)
 
-    item_ids = [bookmark.item_id for bookmark in bookmarks if bookmark.type == ChatType.SUMMARY]
+    item_ids = [dict(summary_id=bookmark.item_id, bookmark_id=bookmark.id) for bookmark in bookmarks if bookmark.type == ChatType.SUMMARY]
 
     summaries = []
     for item_id in item_ids:
-        summary = Summary.find(item_id)
+        summary = Summary.find(item_id["summary_id"])
         if summary:
-            summaries.append(summary)
+            result = SummaryWithBookmarkId(
+                url=summary.url,
+                user_id=summary.user_id,
+                body=summary.body,
+                title=summary.title,
+                bookmark_id=item_id["bookmark_id"])
+            summaries.append(result)
 
     return dict(summaries=summaries)
 
@@ -51,14 +57,24 @@ async def get_bookmark_by_user_id(user_id: str):
     bookmarks = Bookmark.find_by(user_id)
 
     item_ids = [bookmark.item_id for bookmark in bookmarks if bookmark.type == ChatType.QUIZ]
+    item_ids = [dict(quiz_id=bookmark.item_id, bookmark_id=bookmark.id) for bookmark in bookmarks if bookmark.type == ChatType.QUIZ]
 
     quizzes = []
     for item_id in item_ids:
-        quiz = Quiz.find(item_id)
+        quiz = Quiz.find(item_id["quiz_id"])
         if quiz:
-            quizzes.append(quiz)
-
+            result = QuizWithBookmarkId(
+                user_id=quiz.user_id,
+                url=quiz.url,
+                title=quiz.title,
+                question=quiz.question,
+                answer=quiz.answer,
+                score=quiz.score,
+                explanation=quiz.explanation,
+                bookmark_id=item_id["bookmark_id"])
+            quizzes.append(result)
     return dict(quizzes=quizzes)
+
 
 @router.post("/quiz")
 async def bookmark_summary(entry: BookmarkRegisterRequest):

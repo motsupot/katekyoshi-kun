@@ -33,6 +33,9 @@ export const Card: React.FC<{
             fontSize: "18px",
             margin: 0,
             color: "#333",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
           }}
         >
           {title}

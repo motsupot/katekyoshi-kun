@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../constants";
-import Markdown from "react-markdown";
 import { getUserId } from "../shared/functions/getUserId";
-import { Card } from "../sidepanel/components/base";
+import { BookmarkQuizzesUI } from "./components/BookmarkQuizzes";
 
 export const BookmarkQuizzes: React.FC = () => {
   interface Quiz {
@@ -15,7 +14,9 @@ export const BookmarkQuizzes: React.FC = () => {
     explanation: string;
   }
 
-  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [quizzes, setQuizzes] = useState<(Quiz & { bookmark_id: string })[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,63 +40,24 @@ export const BookmarkQuizzes: React.FC = () => {
     fetchQuizzes();
   }, []);
 
-  if (loading) {
-    return <p>読み込み中...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  const deleteBookmark = (bookmarkId: string) => {
+    fetch(`${API_HOST}/bookmarks/${bookmarkId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      setQuizzes((prev) => prev.filter((s) => s.bookmark_id !== bookmarkId));
+    });
+  };
 
   return (
-    <div>
-      <h2>ブックマークしたクイズ一覧</h2>
-      {quizzes.length === 0 ? (
-        <p>ブックマークされたクイズはありません。</p>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "10px",
-          }}
-        >
-          {quizzes.map((quiz) => (
-            <div
-              key={quiz.id}
-              style={{
-                width: "calc(33.333% - 10px)",
-                boxSizing: "border-box",
-              }}
-            >
-              <Card title={quiz.title}>
-                <a href={quiz.url} target="_blank" rel="noreferrer">
-                  ページに移動する
-                </a>
-                <div
-                  style={{
-                    height: "200px",
-                    overflowY: "auto",
-                    color: "#555",
-                    fontSize: "14px",
-                    lineHeight: "1.6",
-                    padding: "4px",
-                    backgroundColor: "#fff",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <Markdown>{quiz.question}</Markdown>
-                  <h3>ユーザの回答</h3>
-                  <Markdown>{quiz.answer}</Markdown>
-                  <Markdown>{quiz.explanation}</Markdown>
-                </div>
-              </Card>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <BookmarkQuizzesUI
+      quizzes={quizzes}
+      loading={loading}
+      error={error}
+      deleteBookmark={deleteBookmark}
+    />
   );
 };

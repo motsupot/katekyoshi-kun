@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { API_HOST } from "../constants";
-import Markdown from "react-markdown";
 import { getUserId } from "../shared/functions/getUserId";
-import { Card } from "../sidepanel/components/base";
+import { BookmarkSummariesUI } from "./components/BookmarkSummaries";
 
-export const BookmarkSummaries: React.FC = () => {
-  interface Summary {
-    id: string;
-    title: string;
-    body: string;
-    url: string;
-  }
-
-  const [summaries, setSummaries] = useState<Summary[]>([]);
+export const BookmarkSummaries: React.FC = ({}: {}) => {
+  const [summaries, setSummaries] = useState<(Summary & { bookmark_id: string})[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,60 +28,24 @@ export const BookmarkSummaries: React.FC = () => {
     fetchSummaries();
   }, []);
 
-  if (loading) {
-    return <p>読み込み中...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  const deleteBookmark = (bookmarkId: string) => {
+    fetch(`${API_HOST}/bookmarks/${bookmarkId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      setSummaries(prev => prev.filter((s) => s.bookmark_id !== bookmarkId))
+    });
+  };
 
   return (
-    <div>
-      <h2>ブックマークしたサマリー一覧</h2>
-      {summaries.length === 0 ? (
-        <p>ブックマークされたサマリーはありません。</p>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "10px",
-          }}
-        >
-          {summaries.map((summary) => (
-            <div
-              key={summary.id}
-              style={{
-                width: "calc(33.333% - 10px)",
-                boxSizing: "border-box",
-              }}
-            >
-              <Card title={summary.title}>
-                <a href={summary.url} target="_blank" rel="noreferrer">
-                  ページに移動する
-                </a>
-                <div
-                  style={{
-                    height: "200px",
-                    overflowY: "auto",
-                    color: "#555",
-                    fontSize: "14px",
-                    lineHeight: "1.6",
-                    padding: "4px",
-                    backgroundColor: "#fff",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    marginBottom: "10px",
-                  }}
-                >
-                  <Markdown>{summary.body}</Markdown>
-                </div>
-              </Card>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <BookmarkSummariesUI
+      summaries={summaries}
+      loading={loading}
+      error={error}
+      deleteBookmark={deleteBookmark}
+    />
   );
 };
