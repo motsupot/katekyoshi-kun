@@ -142,6 +142,15 @@ class Bookmark(BaseModel):
         return list(map(lambda doc: Bookmark.model_validate(doc.to_dict()), docs))
 
 
+    def delete(id: str):
+        doc_ref = db.collection('bookmarks').document(id)
+        doc = doc_ref.get()
+        if doc.exists:
+            doc.reference.delete()
+            return id
+        return None
+
+
 class BookmarkRegisterRequest(BaseModel):
     id: str
     user_id: str
