@@ -30,7 +30,7 @@ const summary = {
   title: "何かしらのタイトルああああああああああ",
   body: "要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。",
   url: "https://google.com",
-  bookmarkId: "bookmarkId",
+  bookmark_id: "bookmarkId",
 } as const;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args

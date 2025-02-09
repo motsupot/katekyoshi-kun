@@ -37,6 +37,11 @@ class Summary(BaseModel):
         docs = db.collection('summaries').where('user_id', '==', user_id).stream()
         return list(map(lambda doc: Summary.model_validate(doc.to_dict()), docs))
 
+
+class SummaryWithBookmarkId(Summary):
+    bookmark_id: str
+
+
 class Conversation(BaseModel):
     url: str
     user_id: str
@@ -114,6 +119,7 @@ class ChatType(str, Enum):
 
 
 class Bookmark(BaseModel):
+    id: Optional[str] = None
     user_id: str
     type: ChatType
     item_id: str
@@ -134,12 +140,15 @@ class Bookmark(BaseModel):
     def find(id: str):
         doc_ref = db.collection('bookmarks').document(id)
         doc = doc_ref.get()
-        return Summary.model_validate(doc.to_dict()) if doc.exists else None
+        return Bookmark.model_validate({**doc.to_dict(), "id": doc.id}) if doc.exists else None
 
 
     def find_by(user_id: str):
         docs = db.collection('bookmarks').where('user_id', '==', user_id).stream()
-        return list(map(lambda doc: Bookmark.model_validate(doc.to_dict()), docs))
+        return [
+            Bookmark.model_validate({**doc.to_dict(), "id": doc.id})
+            for doc in docs
+        ]
 
 
     def delete(id: str):

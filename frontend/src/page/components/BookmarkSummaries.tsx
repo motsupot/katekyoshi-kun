@@ -1,9 +1,10 @@
 import React from "react";
 import Markdown from "react-markdown";
 import { Card } from "../../sidepanel/components/base";
+import { Bookmark } from "../../sidepanel/components/Bookmark";
 
 type Props = {
-  summaries: (Summary & { bookmarkId: string})[];
+  summaries: (Summary & { bookmark_id: string })[];
   loading: boolean;
   error: string | null;
   deleteBookmark: (bookmarkId: string) => void;
@@ -13,6 +14,7 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
   summaries,
   loading,
   error,
+  deleteBookmark,
 }) => {
   if (loading) {
     return <p>読み込み中...</p>;
@@ -35,7 +37,7 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
             gap: "10px",
           }}
         >
-          {summaries.map(({bookmarkId, ...summary}) => (
+          {summaries.map(({ bookmark_id: bookmarkId, ...summary }) => (
             <div
               key={summary.id}
               style={{
@@ -43,7 +45,19 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
                 boxSizing: "border-box",
               }}
             >
-              <Card title={summary.title} >
+              <Card
+                title={summary.title}
+                rightElement={
+                  bookmarkId && (
+                    <Bookmark
+                      isBookmarked={true}
+                      isRegistering={false}
+                      onRegister={() => {}}
+                      onDelete={() => deleteBookmark(bookmarkId)}
+                    />
+                  )
+                }
+              >
                 <a href={summary.url} target="_blank" rel="noreferrer">
                   ページに移動する
                 </a>

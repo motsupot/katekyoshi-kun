@@ -4,7 +4,7 @@ import { getUserId } from "../shared/functions/getUserId";
 import { BookmarkSummariesUI } from "./components/BookmarkSummaries";
 
 export const BookmarkSummaries: React.FC = ({}: {}) => {
-  const [summaries, setSummaries] = useState<(Summary & { bookmarkId: string})[]>([]);
+  const [summaries, setSummaries] = useState<(Summary & { bookmark_id: string})[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +36,7 @@ export const BookmarkSummaries: React.FC = ({}: {}) => {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      // setIsBookmarked(false);
+      setSummaries(prev => prev.filter((s) => s.bookmark_id !== bookmarkId))
     });
   };
 
