@@ -21,12 +21,12 @@
   },
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_icon": "kateikyoushi_woman_boy.png"
+    "default_icon": "aitutor_icon.png"
   },
   "side_panel": {
     "default_path": "./dist/sidepanel/sidepanel.html"
   },
   "icons": {
-    "128": "kateikyoushi_woman_boy.png"
+    "128": "aitutor_icon.png"
   }
 }

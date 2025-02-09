@@ -27,7 +27,7 @@ export const Page: React.FC = () => {
         boxSizing: "border-box",
       }}
     >
-      <h1>AI家庭教師くん</h1>
+      <h1>AI家庭教師くん：ダッシュボード</h1>
       <h2>あなたの人物像</h2>
       {loading && <p>読み込み中...</p>}
       {error && <p>{error}</p>}

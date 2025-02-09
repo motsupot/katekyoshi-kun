@@ -3,7 +3,7 @@ import { CardProps, renderCard } from "./components";
 import { SortableList } from "../shared/components/SortableList/SortableList";
 import { usePageInfo } from "../shared/hooks";
 
-const SidePanelHeader: React.FC = () => <h1>AI家庭教師くん（サイドパネル）</h1>;
+const SidePanelHeader: React.FC = () => <h1>AI家庭教師くん</h1>;
 
 export const SidePanel: React.FC = () => {
   const resetStates = () => {
@@ -49,7 +49,7 @@ export const SidePanel: React.FC = () => {
       <SidePanelHeader />
       <div>
         <button onClick={resetStates}>リセット</button>
-        <button onClick={handleOpenAnalysis}>分析結果を開く</button>
+        <button onClick={handleOpenAnalysis}>ダッシュボードを開く</button>
       </div>
       <div style={{ margin: "30px auto" }}>
         <SortableList
