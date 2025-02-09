@@ -33,14 +33,10 @@ jobs:
         working-directory: ./backend
         run: |
           docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:latest .
-        # <IMAGE_URI> を以下の形式で置き換えてください:
-        # <ARTIFACT_REGISTRY_HOST>/<GCP_PROJECT_ID>/<REPOSITORY>/<IMAGE_NAME>:<TAG>
-        # <DOCKERFILEのあるパス> を Dockerfile の場所に置き換えてください。通常は "."
 
       - name: Docker イメージを Artifact Registry にプッシュ
         run: |
           docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy/fastapi-app:latest
-        # <IMAGE_URI> はビルド時と同じものを指定します
 
       - name: Cloud Run にデプロイ
         run: |
@@ -49,5 +45,3 @@ jobs:
             --region us-central1 \
             --platform managed \
             --allow-unauthenticated
-        # <CLOUD_RUN_SERVICE_NAME> を Cloud Run のサービス名に置き換えてください
-        # <CLOUD_RUN_REGION> をデプロイ先のリージョンに置き換えてください
