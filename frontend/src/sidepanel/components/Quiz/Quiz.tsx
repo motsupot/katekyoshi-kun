@@ -15,8 +15,8 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   const [questionText, setQuestionText] = useState<string | null>(null);
   const [answerText, setAnswerText] = useState<string>("");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [quizStarted, setQuizStarted] = useState<boolean>(false); // State to track if the quiz has started
 
-  // クイズの問題を取得.
   const {
     data: resQuestion,
     loading: isQuestionLoading,
@@ -27,7 +27,6 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     if (resQuestion != null) setQuestionText(resQuestion);
   }, [resQuestion]);
 
-  // 解答に対する答え合わせ（フィードバック）
   const {
     data: resFeedback,
     loading: isFeedbackLoading,
@@ -45,6 +44,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
         title: pageInfo.title,
         page_info: pageInfo.content,
       });
+      setQuizStarted(true); // Set quiz as started
     }
   };
 
@@ -62,18 +62,24 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
 
   return (
     <Card title="クイズで理解度チェック">
-      <Question
-        questionText={questionText}
-        isQuestionLoading={isQuestionLoading}
-        handleMakeQuestion={handleMakeQuestion}
-      />
-      <Answer
-        answerText={answerText}
-        questionText={questionText}
-        setAnswerText={setAnswerText}
-        handleAnswer={handleAnswer}
-      />
-      <Feedback feedback={feedback} isFeedbackLoading={isFeedbackLoading} />
+      {!quizStarted ? (
+        <button onClick={handleMakeQuestion}>出題する</button>
+      ) : (
+        <>
+          <Question
+            questionText={questionText}
+            isQuestionLoading={isQuestionLoading}
+            handleMakeQuestion={handleMakeQuestion}
+          />
+          <Answer
+            answerText={answerText}
+            questionText={questionText}
+            setAnswerText={setAnswerText}
+            handleAnswer={handleAnswer}
+          />
+          <Feedback feedback={feedback} isFeedbackLoading={isFeedbackLoading} />
+        </>
+      )}
     </Card>
   );
 };

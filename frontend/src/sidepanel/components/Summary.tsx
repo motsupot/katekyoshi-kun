@@ -36,34 +36,27 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
 
   return (
     <Card title="要約">
-      <div
-        style={{
-          height: "200px",
-          overflowY: "auto",
-          color: "#555",
-          fontSize: "14px",
-          lineHeight: "1.6",
-          padding: "4px",
-          backgroundColor: "#fff",
-          border: "1px solid #ddd",
-          borderRadius: "4px",
-        }}
-      >
-        {(() => {
-          if (isSummaryLoading) {
-            return <p>要約中・・・</p>;
-          }
-          if (!summary) {
-            return <p>ここに要約が入ります</p>;
-          }
-          return (
-            <p>
-              <Markdown>{summary}</Markdown>
-            </p>
-          );
-        })()}
-      </div>
-      <button onClick={onClickSummary}>{summary ? "再" : ""}要約する</button>
+      {summary || isSummaryLoading ? (
+        <div
+          style={{
+            height: "200px",
+            overflowY: "auto",
+            color: "#555",
+            fontSize: "14px",
+            lineHeight: "1.6",
+            padding: "4px",
+            backgroundColor: "#fff",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            marginBottom: "10px",
+          }}
+        >
+          {isSummaryLoading ? <p>要約中...</p> : <Markdown>{summary}</Markdown>}
+        </div>
+      ) : null}
+      <button onClick={onClickSummary}>
+        {summary ? "再要約する" : "要約する"}
+      </button>
     </Card>
   );
 };

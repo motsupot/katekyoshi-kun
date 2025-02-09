@@ -19,7 +19,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
   // 会話の履歴（ユーザーとアシスタントの発言を管理）
   const [chatHistory, setChatHistory] = useState<Message[]>([]);
-
+  // チャットID
   const [chatId, setChatId] = useState<string | null>(null);
 
   const {
@@ -38,6 +38,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     }
   }, [responseData]);
 
+  // コンポーネントのマウント時に一度だけ実行
   useEffect(() => {
     if (crypto.randomUUID) {
       // ブラウザが対応している場合はcrypto.randomUUIDを使用
@@ -54,23 +55,25 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
     }
   }, []);
 
+  // 会話履歴を文字列として構築
   const buildHistory = () => {
-    const historyText = chatHistory
+    return chatHistory
       .map(
         (msg) =>
           `${msg.role === "user" ? "ユーザー" : "アシスタント"}: ${msg.content}`
       )
       .join("\n");
-    return historyText;
   };
 
+  // 質問を送信する処理
   const handleQuestion = () => {
     if (pageInfo && currentQuestion.trim()) {
-      // まず、ユーザーの発言を会話履歴に追加
+      // ユーザーの発言を会話履歴に追加
       setChatHistory((prev) => [
         ...prev,
         { role: "user", content: currentQuestion.trim() },
       ]);
+      // APIリクエストを送信
       fetchAnswer({
         chat_history: buildHistory(),
         question: currentQuestion.trim(),
@@ -86,34 +89,35 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
 
   return (
     <Card title="チャット形式で質問する">
-      <div
-        style={{
-          height: "200px",
-          overflowY: "auto",
-          color: "#555",
-          fontSize: "14px",
-          lineHeight: "1.6",
-          padding: "4px",
-          backgroundColor: "#fff",
-          border: "1px solid #ddd",
-          borderRadius: "4px",
-          marginBottom: "8px",
-          whiteSpace: "pre-wrap",
-        }}
-      >
-        {/* 会話履歴の表示 */}
-        {chatHistory.length === 0
-          ? "ここに会話の履歴が表示されます"
-          : chatHistory.map((msg, index) => (
-              <div key={index}>
-                <strong>
-                  {msg.role === "user" ? "ユーザー" : "アシスタント"}:{" "}
-                </strong>
-                {msg.content}
-              </div>
-            ))}
-        {isQuestionLoading && <div>考え中...</div>}
-      </div>
+      {/* チャット履歴の表示 */}
+      {chatHistory.length > 0 && (
+        <div
+          style={{
+            height: "200px",
+            overflowY: "auto",
+            color: "#555",
+            fontSize: "14px",
+            lineHeight: "1.6",
+            padding: "4px",
+            backgroundColor: "#fff",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            marginBottom: "8px",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          {chatHistory.map((msg, index) => (
+            <div key={index}>
+              <strong>
+                {msg.role === "user" ? "ユーザー" : "アシスタント"}:{" "}
+              </strong>
+              {msg.content}
+            </div>
+          ))}
+          {isQuestionLoading && <div>考え中...</div>}
+        </div>
+      )}
+      {/* 入力フォーム */}
       <input
         type="text"
         value={currentQuestion}
