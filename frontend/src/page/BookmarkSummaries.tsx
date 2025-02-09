@@ -3,17 +3,9 @@ import { API_HOST } from "../constants";
 import { getUserId } from "../shared/functions/getUserId";
 import { BookmarkSummariesUI } from "./components/BookmarkSummaries";
 
-export const BookmarkSummaries: React.FC = ({
-  originalSummaries,
-  originalLoading,
-}: {
-  originalSummaries?: Summary[];
-  originalLoading?: boolean;
-}) => {
-  const [summaries, setSummaries] = useState<Summary[]>(
-    originalSummaries ?? []
-  );
-  const [loading, setLoading] = useState(originalLoading ?? true);
+export const BookmarkSummaries: React.FC = ({}: {}) => {
+  const [summaries, setSummaries] = useState<(Summary & { bookmarkId: string})[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,11 +28,24 @@ export const BookmarkSummaries: React.FC = ({
     fetchSummaries();
   }, []);
 
+  const deleteBookmark = (bookmarkId: string) => {
+    fetch(`${API_HOST}/bookmarks/${bookmarkId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      // setIsBookmarked(false);
+    });
+  };
+
   return (
     <BookmarkSummariesUI
       summaries={summaries}
       loading={loading}
       error={error}
+      deleteBookmark={deleteBookmark}
     />
   );
 };

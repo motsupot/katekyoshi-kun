@@ -3,9 +3,10 @@ import Markdown from "react-markdown";
 import { Card } from "../../sidepanel/components/base";
 
 type Props = {
-  summaries: Summary[];
+  summaries: (Summary & { bookmarkId: string})[];
   loading: boolean;
   error: string | null;
+  deleteBookmark: (bookmarkId: string) => void;
 };
 
 export const BookmarkSummariesUI: React.FC<Props> = ({
@@ -34,7 +35,7 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
             gap: "10px",
           }}
         >
-          {summaries.map((summary) => (
+          {summaries.map(({bookmarkId, ...summary}) => (
             <div
               key={summary.id}
               style={{
@@ -42,7 +43,7 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
                 boxSizing: "border-box",
               }}
             >
-              <Card title={summary.title}>
+              <Card title={summary.title} >
                 <a href={summary.url} target="_blank" rel="noreferrer">
                   ページに移動する
                 </a>

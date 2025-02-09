@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { BookmarkSummariesUI } from "./BookmarkSummaries";
+import { fn } from '@storybook/test';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -16,6 +17,9 @@ const meta = {
   argTypes: {
     // backgroundColor: { control: 'boolean' },
   },
+  args: {
+    deleteBookmark: fn(),
+  }
 } satisfies Meta<typeof BookmarkSummariesUI>;
 
 export default meta;
@@ -23,9 +27,10 @@ type Story = StoryObj<typeof meta>;
 
 const summary = {
   id: "hoge",
-  title: "何かしらのタイトル",
+  title: "何かしらのタイトルああああああああああ",
   body: "要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。要約がここに入ります。",
   url: "https://google.com",
+  bookmarkId: "bookmarkId",
 } as const;
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
