@@ -6,19 +6,29 @@ import "./Bookmark.css";
 export const Bookmark = ({
   isBookmarked,
   isRegistering,
-  onClick,
-}: Omit<ReturnType<typeof useBookmark>, "bookmarkId" | "registerBookmark"> & {
-  onClick: () => void;
+  onRegister,
+  onDelete,
+}: Omit<ReturnType<typeof useBookmark>, "bookmarkId" | "registerBookmark" | "deleteBookmark"> & {
+  onRegister: () => void;
+  onDelete: () => void;
 }) => {
   const status = toStatus(isBookmarked, isRegistering);
   return (
-    <button className="bookmark-button" onClick={onClick} disabled={status === "loading"}>
+    <button
+      className="bookmark-button"
+      onClick={isBookmarked ? onDelete : onRegister}
+      disabled={status === "loading"}
+    >
       <BookmarkIcon className={`bookmark-icon ${status}`} />
     </button>
   );
 };
 
-const toStatus = (isBookmarked: boolean, isRegistering: boolean): "default" | "loading" | "bookmarked" => {
+const toStatus = (
+  isBookmarked: boolean,
+  isRegistering: boolean
+): "default" | "loading" | "bookmarked" => {
   if (isRegistering) return "loading";
   return isBookmarked ? "bookmarked" : "default";
-}
+};
+

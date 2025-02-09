@@ -33,7 +33,10 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     data: resFeedback,
     loading: isFeedbackLoading,
     fetchData: fetchFeedback,
-  } = useFetch<{ feedback: string; id: string } | null>(`${API_HOST}/predict/scoring`, null);
+  } = useFetch<{ feedback: string; id: string } | null>(
+    `${API_HOST}/predict/scoring`,
+    null
+  );
 
   useEffect(() => {
     if (resFeedback != null) {
@@ -66,23 +69,29 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   };
 
   // ブックマーク追加
-  const { isBookmarked, isRegistering, registerBookmark } = useBookmark("quiz");
-  const onBookmark = () => {
-    if (quizId == null) {
-      console.error("クイズIDが存在しません.");
-      return;
-    }
-    registerBookmark(quizId);
-  };
+  const {
+    isBookmarked,
+    isRegistering,
+    registerBookmark,
+    deleteBookmark,
+  } = useBookmark("quiz");
 
   return (
-    <Card title="クイズで理解度チェック"
+    <Card
+      title="クイズで理解度チェック"
       rightElement={
         quizId && (
           <Bookmark
             isBookmarked={isBookmarked}
             isRegistering={isRegistering}
-            onClick={onBookmark}
+            onRegister={() => {
+              if (quizId == null) {
+                console.error("クイズIDが存在しません.");
+                return;
+              }
+              registerBookmark(quizId);
+            }}
+            onDelete={deleteBookmark}
           />
         )
       }
