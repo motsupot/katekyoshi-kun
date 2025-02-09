@@ -1,0 +1,30 @@
+.bookmark-icon {
+  width: 24px;
+  height: 24px;
+  transition: fill 0.3s ease-in-out;
+}
+
+.default {
+  fill: gray;
+}
+
+.loading {
+  fill: orange;
+  animation: pulse 1s infinite;
+}
+
+.bookmarked {
+  fill: blue;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
