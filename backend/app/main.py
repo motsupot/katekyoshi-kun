@@ -1,7 +1,7 @@
 from app.bookmarks import router as bookmark_router
 from app.db import db, save_question_and_answer
 from app.predict import router as predict_router
-from app.model import AnalyzeProfileRequest, Summary, Conversation, Message, Quizz
+from app.model import AnalyzeProfileRequest, Summary, Conversation, Message, Quiz
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from google.cloud import aiplatform
@@ -74,15 +74,15 @@ async def analyze_profile(request: AnalyzeProfileRequest):
     print("conversations_list:", conversations_list)
     messages_list = Message.find_by_user_id(request.user_id)
     print("messages_list:", messages_list)
-    quizzies_list = Quizz.find_by_user_id(request.user_id)
-    print("quizzies_list:", quizzies_list)
+    quizzes_list = Quiz.find_by_user_id(request.user_id)
+    print("quizzes_list:", quizzes_list)
 
     # 取得した各データを文字列に変換（例：必要なフィールドのみ抽出）
     summaries_data = "\n".join([s.body for s in summaries_list])
     conversations_data = "\n".join([f"タイトル: {c.title}\n（チャットID: {c.chat_id}  タイムスタンプ： {c.timestamp} ）" for c in conversations_list])
     messages_data = "\n".join([f"チャットID: {m.chat_id}\nタイムスタンプ: {m.timestamp}\n質問: {m.input} -> 回答: {m.output}" for m in messages_list])
-    quizzies_data = "\n".join([f"問題: {q.question}\n回答: {q.answer}\n得点: {q.score} \nタイムスタンプ: {q.timestamp} " for q in quizzies_list])
-    
+    quizzes_data = "\n".join([f"問題: {q.question}\n回答: {q.answer}\n得点: {q.score} \nタイムスタンプ: {q.timestamp} " for q in quizzes_list])
+
     # プロンプトを組み立てる
     prompt = (
         "あなたは心理分析の専門家です。以下の情報をもとに、このユーザーの全体像、強み、弱み、"
@@ -90,12 +90,12 @@ async def analyze_profile(request: AnalyzeProfileRequest):
         "【要約内容】\n" + summaries_data + "\n\n"
         "【チャット履歴】\n" + conversations_data + "\n\n"
         "【メッセージ履歴】\n" + messages_data + "\n\n"
-        "【クイズ結果】\n" + quizzies_data + "\n\n"
+        "【クイズ結果】\n" + quizzes_data + "\n\n"
         "以上の情報を総合して、分析結果を出力してください。ただし、チャットIDなどの情報は含めないようにしてください。"
     )
-    
+
     print("生成プロンプト:\n", prompt)
-    
+
     # generative モデルを呼び出して分析結果を取得する
     model = GenerativeModel("gemini-1.5-flash-002")
     response = model.generate_content(prompt)

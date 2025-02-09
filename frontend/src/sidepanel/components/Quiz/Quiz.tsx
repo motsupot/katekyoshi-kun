@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { PageInfo } from "../../../types/Page";
 import { Card, CardBase } from "../base";
-import { useFetch } from "../../../shared/hooks";
+import { useBookmark, useFetch } from "../../../shared/hooks";
 import { API_HOST } from "../../../constants";
 import { Question } from "./Question";
 import { Feedback } from "./Feedback";
 import { Answer } from "./Answer";
+import { Bookmark } from "../Bookmark";
 
 type Props = {
   pageInfo: PageInfo | null;
@@ -15,6 +16,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   const [questionText, setQuestionText] = useState<string | null>(null);
   const [answerText, setAnswerText] = useState<string>("");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [quizId, setQuizId] = useState<string | null>(null);
   const [quizStarted, setQuizStarted] = useState<boolean>(false); // State to track if the quiz has started
 
   const {
@@ -31,10 +33,13 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     data: resFeedback,
     loading: isFeedbackLoading,
     fetchData: fetchFeedback,
-  } = useFetch<string | null>(`${API_HOST}/predict/scoring`, null);
+  } = useFetch<{ feedback: string; id: string } | null>(`${API_HOST}/predict/scoring`, null);
 
   useEffect(() => {
-    if (resFeedback != null) setFeedback(resFeedback);
+    if (resFeedback != null) {
+      setFeedback(resFeedback.feedback);
+      setQuizId(resFeedback.id);
+    }
   }, [resFeedback]);
 
   const handleMakeQuestion = () => {
@@ -60,8 +65,28 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
     }
   };
 
+  // ブックマーク追加
+  const { isBookmarked, isRegistering, registerBookmark } = useBookmark("quiz");
+  const onBookmark = () => {
+    if (quizId == null) {
+      console.error("クイズIDが存在しません.");
+      return;
+    }
+    registerBookmark(quizId);
+  };
+
   return (
-    <Card title="クイズで理解度チェック">
+    <Card title="クイズで理解度チェック"
+      rightElement={
+        quizId && (
+          <Bookmark
+            isBookmarked={isBookmarked}
+            isRegistering={isRegistering}
+            onClick={onBookmark}
+          />
+        )
+      }
+    >
       {!quizStarted ? (
         <button onClick={handleMakeQuestion}>出題する</button>
       ) : (

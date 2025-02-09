@@ -13,7 +13,8 @@
     "build:sidepanel": "vite build --config vite.config.sidepanel.mts",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_c203ee57628ce08"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",

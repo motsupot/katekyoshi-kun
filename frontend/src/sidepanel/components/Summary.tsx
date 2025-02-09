@@ -25,7 +25,6 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
 
   useEffect(() => {
     if (summaryData !== null) {
-      console.log({ summaryData });
       setSummary(summaryData.result);
       setSummaryId(summaryData.id);
     }
