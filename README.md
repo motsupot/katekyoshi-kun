@@ -15,12 +15,12 @@
 
   <!-- バックエンド -->
   <img src="https://img.shields.io/badge/-Python-F2C63C.svg?logo=python&style=for-the-badge">
-  <img src="https://img.shields.io/badge/-FastAPI-009688.svg?logo=FastAPI&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-FastAPI-005571.svg?style=for-the-badge&logo=fastapi">
   
   <!-- インフラ一覧 -->
   <img src="https://img.shields.io/badge/-Firestore-000000.svg?logo=firebase&style=for-the-badge&logoColor=red">
   <img src="https://img.shields.io/badge/-VertexAI-000000.svg?logo=VertexAI&style=for-the-badge">
-  <img src="https://img.shields.io/badge/-GithubActions-000000.svg?logo=GithubActions&style=for-the-badge">
+  <img src="https://img.shields.io/badge/-GithubActions-F8F8FF.svg?logo=GithubActions&style=for-the-badge">
   
 </p>
 
