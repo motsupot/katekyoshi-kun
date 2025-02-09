@@ -39,14 +39,14 @@ aiplatform.init(project=PROJECT_ID, location=LOCATION)
 @app.post("/analyze_profile")
 async def analyze_profile(request: AnalyzeProfileRequest):
    # データ取得
-    summaries_data, conversations_data, messages_data, quizzies_data = await data_service.get_user_data_as_strings(request.user_id)
+    summaries_data, conversations_data, messages_data, quizzes_data = await data_service.get_user_data_as_strings(request.user_id)
 
     # プロンプト生成
     prompt = prompt_service.create_analysis_prompt(
         summaries_data=summaries_data,
         conversations_data=conversations_data,
         messages_data=messages_data,
-        quizzies_data=quizzies_data
+        quizzes_data=quizzes_data
     )
     print("生成プロンプト:\n", prompt)
 
