@@ -69,7 +69,7 @@ export const QuizCard: React.FC<Props> = ({ pageInfo }) => {
   const { isBookmarked, isRegistering, registerBookmark } = useBookmark("quiz");
   const onBookmark = () => {
     if (quizId == null) {
-      console.error("要約IDが存在しません.");
+      console.error("クイズIDが存在しません.");
       return;
     }
     registerBookmark(quizId);
