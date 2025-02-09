@@ -43,16 +43,12 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
   };
 
   // ブックマーク追加
-  const { isBookmarked, isRegistering, registerBookmark } =
-    useBookmark("summary");
-
-  const onBookmark = () => {
-    if (summaryId == null) {
-      console.error("要約IDが存在しません.");
-      return;
-    }
-    registerBookmark(summaryId);
-  };
+  const {
+    isBookmarked,
+    isRegistering,
+    registerBookmark,
+    deleteBookmark,
+  } = useBookmark("summary");
 
   return (
     <Card
@@ -62,7 +58,14 @@ export const SummaryCard: React.FC<Props> = ({ pageInfo }) => {
           <Bookmark
             isBookmarked={isBookmarked}
             isRegistering={isRegistering}
-            onClick={onBookmark}
+            onRegister={() => {
+              if (summaryId == null) {
+                console.error("要約IDが存在しません.");
+                return;
+              }
+              registerBookmark(summaryId);
+            }}
+            onDelete={deleteBookmark}
           />
         )
       }

@@ -103,7 +103,7 @@ export const useFetchData = <T>(defaultState: T) => {
 export const useBookmark = (type: "summary" | "question" | "quiz") => {
   const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
-  const [bookmarkId, setBookmarkId] = useState<boolean>(false);
+  const [bookmarkId, setBookmarkId] = useState<string | null>(null);
 
   const registerBookmark = (contentId: string) => {
     setIsRegistering(true);
@@ -129,5 +129,30 @@ export const useBookmark = (type: "summary" | "question" | "quiz") => {
       .finally(() => setIsRegistering(false));
   };
 
-  return { isBookmarked, isRegistering, bookmarkId, registerBookmark };
+  const deleteBookmark = () => {
+    if (bookmarkId == null) {
+      console.error("bookmarkId がセットされていません.");
+      return;
+    }
+    setIsRegistering(true);
+    fetch(`${API_HOST}/bookmarks/${bookmarkId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        setIsBookmarked(false);
+      })
+      .finally(() => setIsRegistering(false));
+  };
+
+  return {
+    isBookmarked,
+    isRegistering,
+    bookmarkId,
+    registerBookmark,
+    deleteBookmark,
+  };
 };

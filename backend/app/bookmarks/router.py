@@ -13,15 +13,15 @@ async def get_all_bookmarks():
 @router.get("/summary/{user_id}")
 async def get_bookmark_by_user_id(user_id: str):
     bookmarks = Bookmark.find_by(user_id)
-    
+
     item_ids = [bookmark.item_id for bookmark in bookmarks if bookmark.type == ChatType.SUMMARY]
-    
+
     summaries = []
     for item_id in item_ids:
         summary = Summary.find(item_id)
         if summary:
             summaries.append(summary)
-    
+
     return dict(summaries=summaries)
 
 @router.post("/summary")
@@ -63,3 +63,14 @@ async def bookmark_summary(entry: BookmarkRegisterRequest):
     bookmark = Bookmark(user_id=quiz.user_id, type=ChatType.QUIZ, item_id=entry.id)
     bookmark_id = bookmark.save()
     return dict(id=bookmark_id)
+
+
+@router.delete("/{bookmark_id}")
+async def delete_bookmark(bookmark_id: str):
+    deleted = Bookmark.delete(bookmark_id)
+    if deleted is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Bookmark not found."
+        )
+    return f"bookmark {deleted} has deleted."
