@@ -17,7 +17,7 @@ export const BookmarkQuizzesUI: React.FC<Props> = ({
   deleteBookmark,
 }) => {
   if (loading) {
-    return <p>読み込み中...</p>;
+    return;
   }
 
   if (error) {
@@ -26,7 +26,15 @@ export const BookmarkQuizzesUI: React.FC<Props> = ({
 
   return (
     <div>
-      <h2>ブックマークしたクイズ一覧</h2>
+      <h2
+        style={{
+          color: "#283E51",
+          borderBottom: "2px solid #283E51",
+          paddingBottom: "0.5rem",
+        }}
+      >
+        ブックマークしたクイズ一覧
+      </h2>
       {quizzes.length === 0 ? (
         <p>ブックマークされたクイズはありません。</p>
       ) : (

@@ -4,6 +4,7 @@ import { API_HOST } from "../constants";
 import Markdown from "react-markdown";
 import { BookmarkSummaries } from "./BookmarkSummaries";
 import { BookmarkQuizzes } from "./BookmarkQuizzes";
+import { LoadingSpinner } from "../shared/components/LoadingSpinner/LoadingSpinner";
 
 export const Page: React.FC = () => {
   const { data, loading, error, fetchData } = useFetch(
@@ -55,7 +56,11 @@ export const Page: React.FC = () => {
           padding: "2rem",
         }}
       >
-        {loading && <p style={{ textAlign: "center" }}>読み込み中...</p>}
+        {loading && (
+          <div>
+            <LoadingSpinner />
+          </div>
+        )}
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
         {data && (
           <section style={{ marginBottom: "2rem" }}>
@@ -75,9 +80,6 @@ export const Page: React.FC = () => {
         )}
 
         <section style={{ marginTop: "2rem" }}>
-          <h2 style={{ color: "#283E51", textAlign: "center" }}>
-            ブックマーク一覧
-          </h2>
           <div style={{ marginTop: "1rem" }}>
             <BookmarkSummaries />
             <BookmarkQuizzes />

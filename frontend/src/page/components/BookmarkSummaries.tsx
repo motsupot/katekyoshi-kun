@@ -17,7 +17,7 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
   deleteBookmark,
 }) => {
   if (loading) {
-    return <p>読み込み中...</p>;
+    return;
   }
 
   if (error) {
@@ -26,7 +26,15 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
 
   return (
     <div>
-      <h2>ブックマークした要約一覧</h2>
+      <h2
+        style={{
+          color: "#283E51",
+          borderBottom: "2px solid #283E51",
+          paddingBottom: "0.5rem",
+        }}
+      >
+        ブックマークした要約一覧
+      </h2>
       {summaries.length === 0 ? (
         <p>ブックマークされたサマリーはありません。</p>
       ) : (
