@@ -296,7 +296,7 @@ class Quiz(BaseModel):
     def find(id: str):
         doc_ref = db.collection('quizzes').document(id)
         doc = doc_ref.get()
-        return Summary.model_validate(doc.to_dict()) if doc.exists else None
+        return Quiz.model_validate(doc.to_dict()) if doc.exists else None
 
 
     def find_by_user_id(user_id: str):
