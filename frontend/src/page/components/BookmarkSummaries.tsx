@@ -26,7 +26,7 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
 
   return (
     <div>
-      <h2>ブックマークしたサマリー一覧</h2>
+      <h2>ブックマークした要約一覧</h2>
       {summaries.length === 0 ? (
         <p>ブックマークされたサマリーはありません。</p>
       ) : (
