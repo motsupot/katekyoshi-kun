@@ -1,6 +1,8 @@
 import { PageInfo } from "../../../types/Page";
 
-export const buildQuestionPrompt = (pageContent: PageInfo["content"]): string => {
+export const buildQuestionPrompt = (
+  pageContent: PageInfo["content"]
+): string => {
   return `
 指示:
 

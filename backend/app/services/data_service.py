@@ -20,12 +20,12 @@ async def get_user_data_as_strings(user_id: str) -> tuple[str, str, str, str, st
         elif bookmark.type == ChatType.QUIZ: 
             quiz = Quiz.find(bookmark.item_id) 
             if quiz:
-                bookmarked_quizzes_list.append(f"問題: {quiz.question}\n回答: {quiz.answer}\n得点: {quiz.score} \n解説:{quiz.explanation} \nタイムスタンプ: {quiz.timestamp} ")
+                bookmarked_quizzes_list.append(f"問題: {quiz.question}\n解答: {quiz.answer}\n得点: {quiz.score} \n解説:{quiz.explanation} \nタイムスタンプ: {quiz.timestamp} ")
 
     summaries_data = "\n".join([s.body for s in summaries_list])
     conversations_data = "\n".join([f"タイトル: {c.title}\n（チャットID: {c.chat_id}  タイムスタンプ： {c.timestamp} ）" for c in conversations_list])
-    messages_data = "\n".join([f"チャットID: {m.chat_id}\nタイムスタンプ: {m.timestamp}\n質問: {m.input} -> 回答: {m.output}" for m in messages_list])
-    quizzes_data = "\n".join([f"問題: {q.question}\n回答: {q.answer}\n得点: {q.score}\n解説:{q.explanation} \nタイムスタンプ: {q.timestamp} " for q in quizzes_list])
+    messages_data = "\n".join([f"チャットID: {m.chat_id}\nタイムスタンプ: {m.timestamp}\n質問: {m.input} -> 解答: {m.output}" for m in messages_list])
+    quizzes_data = "\n".join([f"問題: {q.question}\n解答: {q.answer}\n得点: {q.score}\n解説:{q.explanation} \nタイムスタンプ: {q.timestamp} " for q in quizzes_list])
     bookmarked_summaries_data = "\n".join(bookmarked_summaries_list)
     bookmarked_quizzes_data = "\n".join(bookmarked_quizzes_list)
 
