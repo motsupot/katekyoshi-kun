@@ -3,6 +3,7 @@ import { Card, CardBase } from "./base";
 import { PageInfo } from "../../types/Page";
 import { useFetch } from "../../shared/hooks";
 import { API_HOST } from "../../constants";
+import Markdown from "react-markdown";
 
 // メッセージの型定義
 type Message = {
@@ -111,7 +112,7 @@ export const QuestionCard: React.FC<Props> = ({ pageInfo }) => {
               <strong>
                 {msg.role === "user" ? "ユーザー" : "アシスタント"}:{" "}
               </strong>
-              {msg.content}
+              <Markdown>{msg.content}</Markdown>
             </div>
           ))}
           {isQuestionLoading && <div>考え中...</div>}
