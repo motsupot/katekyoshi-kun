@@ -42,14 +42,15 @@ export const BookmarkQuizzesUI: React.FC<Props> = ({
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "10px",
+            columnGap: "40px",
+            rowGap: "8px",
           }}
         >
           {quizzes.map(({ bookmark_id: bookmarkId, ...quiz }) => (
             <div
               key={quiz.id}
               style={{
-                width: "calc(33.333% - 10px)",
+                width: "calc(33.333% - 40px)",
                 boxSizing: "border-box",
               }}
             >
