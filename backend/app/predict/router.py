@@ -34,7 +34,7 @@ async def predict_question(request: PredictQuestion):
     prompt = (
         f"参考情報：\n{request.page_info}\n"
         f"これまでの会話内容：\n{request.chat_history}\n"
-        "上記の会話内容を踏まえて、アシスタントとして以下の質問に解答せよ。\n"
+        "上記の会話内容を踏まえて、アシスタントとして以下の質問に回答せよ。\n"
         f"質問：{request.question}"
     )
 
