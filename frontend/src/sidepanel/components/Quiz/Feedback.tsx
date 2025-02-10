@@ -9,7 +9,7 @@ export const Feedback = ({
   isFeedbackLoading: boolean;
 }) => {
   if (isFeedbackLoading) {
-    return <div>解答を採点中...</div>;
+    return <div>採点中...</div>;
   }
   if (feedback == null) {
     return <></>;

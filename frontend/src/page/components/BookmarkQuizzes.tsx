@@ -85,7 +85,7 @@ export const BookmarkQuizzesUI: React.FC<Props> = ({
                   }}
                 >
                   <Markdown>{quiz.question}</Markdown>
-                  <h3>ユーザの回答</h3>
+                  <h3>自身の解答</h3>
                   <Markdown>{quiz.answer}</Markdown>
                   <Markdown>{quiz.explanation}</Markdown>
                 </div>
