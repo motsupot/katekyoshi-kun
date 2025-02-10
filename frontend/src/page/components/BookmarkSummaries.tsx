@@ -42,14 +42,15 @@ export const BookmarkSummariesUI: React.FC<Props> = ({
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "10px",
+            columnGap: "40px",
+            rowGap: "8px",
           }}
         >
           {summaries.map(({ bookmark_id: bookmarkId, ...summary }) => (
             <div
               key={summary.id}
               style={{
-                width: "calc(33.333% - 10px)",
+                width: "calc(33.333% - 40px)",
                 boxSizing: "border-box",
               }}
             >
